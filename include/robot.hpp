@@ -10,4 +10,5 @@ namespace robot {
   extern std::shared_ptr<okapi::Motor> rightDriveF;
   extern std::shared_ptr<okapi::Motor> rightDriveR;
   extern std::shared_ptr<okapi::Motor> lift;
+  extern std::shared_ptr<okapi::Motor> angler;
 }

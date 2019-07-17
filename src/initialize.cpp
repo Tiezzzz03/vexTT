@@ -8,6 +8,7 @@ void initialize() {
 	robot::rightDriveR = std::make_shared<okapi::Motor>(-15);
 
 	robot::lift = std::make_shared<okapi::Motor>(19);
+	robot::angler = std::make_shared<okapi::Motor>(9);
 }
 
 void disabled() {

@@ -20,6 +20,14 @@ void opcontrol() {
 			robot::lift->controllerSet(0);
 		}
 
+		if(robot::master.getDigital(okapi::ControllerDigital::L1)){
+			robot::angler->controllerSet(1);
+		} else if (robot::master.getDigital(okapi::ControllerDigital::L2)){
+			robot::angler->controllerSet(-1);
+		} else {
+			robot::angler->controllerSet(0);
+		}
+
 		pros::delay(10);
 	}
 }
