@@ -9,6 +9,9 @@ void initialize() {
 
 	robot::lift = std::make_shared<okapi::Motor>(19);
 	robot::angler = std::make_shared<okapi::Motor>(9);
+
+	robot::lIntake = std::make_shared<okapi::Motor>(8);
+  robot::rIntake = std::make_shared<okapi::Motor>(-18);
 }
 
 void disabled() {
