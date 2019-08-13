@@ -2,6 +2,11 @@
 #include "robot.hpp"
 
 namespace robot {
+  namespace config {
+    const int anglerActivePos = 600;
+    const int anglerStackingPos = 1000;
+  }
+
   okapi::Controller master;
 
   std::shared_ptr<okapi::SkidSteerModel> chassis;

@@ -18,11 +18,9 @@ void opcontrol() {
 		}
 
 		if(robot::master.getDigital(okapi::ControllerDigital::L1)){
-			robot::angler->controllerSet(1);
+			robot::angler->moveAbsolute(robot::config::anglerStackingPos, 100);
 		} else if (robot::master.getDigital(okapi::ControllerDigital::L2)){
-			robot::angler->controllerSet(-1);
-		} else {
-			robot::angler->controllerSet(0);
+			robot::angler->moveAbsolute(robot::config::anglerActivePos, 100);
 		}
 
 		if(robot::master.getDigital(okapi::ControllerDigital::A)){

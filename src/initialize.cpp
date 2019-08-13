@@ -20,6 +20,13 @@ void initialize() {
 	//config motors / sensors
 	robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
 	robot::angler->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+
+	robot::lift->setGearing(okapi::AbstractMotor::gearset::red);
+	robot::angler->setGearing(okapi::AbstractMotor::gearset::red);
+
+	robot::chassis->resetSensors();
+	robot::lift->tarePosition();
+	robot::angler->tarePosition();
 }
 
 void disabled() {

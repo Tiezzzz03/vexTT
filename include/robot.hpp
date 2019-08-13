@@ -4,7 +4,8 @@
 
 namespace robot {
   namespace config {
-
+    extern const int anglerActivePos;
+    extern const int anglerStackingPos;
   }
 
   extern okapi::Controller master;
