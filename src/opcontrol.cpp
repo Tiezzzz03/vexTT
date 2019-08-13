@@ -5,14 +5,9 @@ void opcontrol() {
 	bool intaking = false;
 
 	while(true){
-		auto left = robot::master.getAnalog(okapi::ControllerAnalog::leftY);
-		auto right = robot::master.getAnalog(okapi::ControllerAnalog::rightY);
-
-		robot::leftDriveF->controllerSet(left);
-		robot::leftDriveR->controllerSet(left);
-
-		robot::rightDriveF->controllerSet(right);
-		robot::rightDriveR->controllerSet(right);
+		robot::chassis->tank(
+			robot::master.getAnalog(okapi::ControllerAnalog::leftY),
+			robot::master.getAnalog(okapi::ControllerAnalog::rightY));
 
 		if(robot::master.getDigital(okapi::ControllerDigital::R1)){
 			robot::lift->controllerSet(1);
@@ -32,16 +27,14 @@ void opcontrol() {
 
 		if(robot::master.getDigital(okapi::ControllerDigital::A)){
 			intaking = true;
-		}else if(robot::master.getDigital(okapi::ControllerDigital::B)){
+		} else if(robot::master.getDigital(okapi::ControllerDigital::B)){
 			intaking = false;
 		}
 
 		if(intaking){
-			robot::lIntake->controllerSet(1);
-			robot::rIntake->controllerSet(1);
-		}else{
-			robot::lIntake->controllerSet(0);
-			robot::rIntake->controllerSet(0);
+			robot::intake->controllerSet(1);
+		} else{
+			robot::intake->controllerSet(0);
 		}
 
 		pros::delay(10);

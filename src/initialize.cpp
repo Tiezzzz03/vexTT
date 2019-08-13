@@ -2,16 +2,24 @@
 #include "robot.hpp"
 
 void initialize() {
-	robot::leftDriveF = std::make_shared<okapi::Motor>(-10);
-	robot::leftDriveR = std::make_shared<okapi::Motor>(5);
-	robot::rightDriveF = std::make_shared<okapi::Motor>(20);
-	robot::rightDriveR = std::make_shared<okapi::Motor>(-15);
+	//init motors / sensors
+	robot::chassis = std::make_shared<okapi::SkidSteerModel>(
+		std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({robot::underlying::leftDriveF,  robot::underlying::leftDriveR})),
+		std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({robot::underlying::rightDriveF, robot::underlying::rightDriveR})),
+		200, 12000
+	);
+
+	robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({
+			robot::underlying::lIntake,
+			robot::underlying::rIntake
+	}));
 
 	robot::lift = std::make_shared<okapi::Motor>(19);
 	robot::angler = std::make_shared<okapi::Motor>(9);
 
-	robot::lIntake = std::make_shared<okapi::Motor>(8);
-  robot::rIntake = std::make_shared<okapi::Motor>(-18);
+	//config motors / sensors
+	robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+	robot::angler->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
 }
 
 void disabled() {
