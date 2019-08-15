@@ -4,8 +4,8 @@
 
 namespace robot {
   namespace config {
-    extern const int anglerActivePos;
-    extern const int anglerStackingPos;
+    extern volatile int anglerActivePos;
+    extern volatile int anglerStackingPos;
   }
 
   extern okapi::Controller master;
@@ -23,4 +23,14 @@ namespace robot {
     extern okapi::Motor lIntake;
     extern okapi::Motor rIntake;
   }
+
+  enum class IntakeStatus {
+    on, off, stacking
+  };
+
+  enum class AnglerStatus {
+    initial, active, stacking
+  };
+
+  void resetAngler();
 }

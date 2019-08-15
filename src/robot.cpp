@@ -3,8 +3,8 @@
 
 namespace robot {
   namespace config {
-    const int anglerActivePos = 600;
-    const int anglerStackingPos = 1000;
+    volatile int anglerActivePos = 600;
+    volatile int anglerStackingPos = 1100;
   }
 
   okapi::Controller master;
@@ -21,5 +21,14 @@ namespace robot {
     okapi::Motor rightDriveR(-15);
     okapi::Motor lIntake(-8);
     okapi::Motor rIntake(18);
+  }
+
+  void resetAngler(){
+    angler->moveVoltage(-4000);
+    do {
+      pros::delay(1000);
+    } while(angler->getEfficiency() > 0);
+
+    angler->tarePosition();
   }
 }
