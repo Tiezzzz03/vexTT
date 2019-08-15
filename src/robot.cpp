@@ -21,6 +21,10 @@ namespace robot {
     okapi::Motor rightDriveR(-15);
     okapi::Motor lIntake(-8);
     okapi::Motor rIntake(18);
+
+    //okapi::ADIEncoder leftEnc(1,2);
+    //okapi::ADIEncoder middleEnc(5,6);
+    //okapi::ADIEncoder rightEnc(7,8);
   }
 
   void resetAngler(){

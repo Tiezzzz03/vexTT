@@ -18,7 +18,8 @@ void initialize() {
 	robot::angler = std::make_shared<okapi::Motor>(9);
 
 	//config motors / sensors
-	robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+	robot::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+	robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 	robot::angler->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
 
 	robot::lift->setGearing(okapi::AbstractMotor::gearset::red);

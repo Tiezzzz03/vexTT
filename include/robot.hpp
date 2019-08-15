@@ -22,6 +22,10 @@ namespace robot {
     extern okapi::Motor rightDriveR;
     extern okapi::Motor lIntake;
     extern okapi::Motor rIntake;
+
+    //extern okapi::ADIEncoder leftEnc;
+    //extern okapi::ADIEncoder middleEnc;
+    //extern okapi::ADIEncoder rightEnc;
   }
 
   enum class IntakeStatus {
