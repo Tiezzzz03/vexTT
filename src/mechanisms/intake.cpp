@@ -18,7 +18,7 @@ void Intake::setStatus(IntakeStatus istatus){
       motor->moveVoltage(onVoltage);
       break;
     case IntakeStatus::stacking:
-      motor->moveRelative(-stackingDeltaPos, 100);
+      motor->moveRelative(-stackingDeltaPos, 30);
       break;
   }
 }

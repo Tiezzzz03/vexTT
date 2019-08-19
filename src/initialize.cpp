@@ -39,7 +39,7 @@ void initialize() {
 
 	robot::angler = std::make_shared<robot::Angler>(
 		std::make_unique<okapi::AsyncPosIntegratedController>(
-			robot::underlying::angler, okapi::TimeUtilFactory::create()
+			robot::underlying::angler, 100, okapi::TimeUtilFactory::create()
 		),
 		600,
 		1100
