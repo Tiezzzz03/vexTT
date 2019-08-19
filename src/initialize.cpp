@@ -1,5 +1,6 @@
 #include "main.h"
 #include "robot.hpp"
+#include "robotUnderlying.hpp"
 
 void initialize() {
 	//init motors / sensors
@@ -15,19 +16,28 @@ void initialize() {
 	}));
 
 	robot::lift = std::make_shared<okapi::Motor>(19);
-	robot::angler = std::make_shared<okapi::Motor>(9);
+	robot::underlying::angler = std::make_shared<okapi::Motor>(9);
 
 	//config motors / sensors
 	robot::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 	robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
-	robot::angler->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+	robot::underlying::angler->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
 
 	robot::lift->setGearing(okapi::AbstractMotor::gearset::red);
-	robot::angler->setGearing(okapi::AbstractMotor::gearset::red);
+	robot::underlying::angler->setGearing(okapi::AbstractMotor::gearset::red);
 
 	robot::chassis->resetSensors();
 	robot::lift->tarePosition();
-	robot::angler->tarePosition();
+	robot::underlying::angler->tarePosition();
+
+	//make mechanism wrappers
+	robot::angler = std::make_shared<robot::Angler>(
+		std::make_unique<okapi::AsyncPosIntegratedController>(
+			robot::underlying::angler, okapi::TimeUtilFactory::create()
+		),
+		600,
+		1100
+	);
 }
 
 void disabled() {

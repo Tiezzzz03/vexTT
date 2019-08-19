@@ -1,10 +1,9 @@
 #include "main.h"
 #include "robot.hpp"
+#include "robotUnderlying.hpp"
 
 namespace robot {
   namespace config {
-    volatile int anglerActivePos = 600;
-    volatile int anglerStackingPos = 1100;
   }
 
   okapi::Controller master;
@@ -12,7 +11,7 @@ namespace robot {
   std::shared_ptr<okapi::SkidSteerModel> chassis;
   std::shared_ptr<okapi::MotorGroup> intake;
   std::shared_ptr<okapi::Motor> lift;
-  std::shared_ptr<okapi::Motor> angler;
+  std::shared_ptr<Angler> angler;
 
   namespace underlying {
     okapi::Motor leftDriveF(-10);
@@ -22,17 +21,10 @@ namespace robot {
     okapi::Motor lIntake(-8);
     okapi::Motor rIntake(18);
 
+    std::shared_ptr<okapi::Motor> angler;
+
     //okapi::ADIEncoder leftEnc(1,2);
     //okapi::ADIEncoder middleEnc(5,6);
     //okapi::ADIEncoder rightEnc(7,8);
-  }
-
-  void resetAngler(){
-    angler->moveVoltage(-4000);
-    do {
-      pros::delay(1000);
-    } while(angler->getEfficiency() > 0);
-
-    angler->tarePosition();
   }
 }
