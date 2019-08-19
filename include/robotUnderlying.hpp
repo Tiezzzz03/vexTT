@@ -16,5 +16,6 @@ namespace underlying {
   //extern okapi::ADIEncoder rightEnc;
 
   extern std::shared_ptr<okapi::Motor> angler;
+  extern std::shared_ptr<okapi::MotorGroup> intake;
 }
 }

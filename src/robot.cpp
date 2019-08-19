@@ -3,28 +3,33 @@
 #include "robotUnderlying.hpp"
 
 namespace robot {
-  namespace config {
-  }
 
-  okapi::Controller master;
+namespace config {
+}
 
-  std::shared_ptr<okapi::SkidSteerModel> chassis;
-  std::shared_ptr<okapi::MotorGroup> intake;
-  std::shared_ptr<okapi::Motor> lift;
-  std::shared_ptr<Angler> angler;
+okapi::Controller master;
 
-  namespace underlying {
-    okapi::Motor leftDriveF(-10);
-    okapi::Motor leftDriveR(5);
-    okapi::Motor rightDriveF(20);
-    okapi::Motor rightDriveR(-15);
-    okapi::Motor lIntake(-8);
-    okapi::Motor rIntake(18);
+std::shared_ptr<okapi::SkidSteerModel> chassis;
+std::shared_ptr<Intake> intake;
+std::shared_ptr<okapi::Motor> lift;
+std::shared_ptr<Angler> angler;
 
-    std::shared_ptr<okapi::Motor> angler;
+namespace underlying {
 
-    //okapi::ADIEncoder leftEnc(1,2);
-    //okapi::ADIEncoder middleEnc(5,6);
-    //okapi::ADIEncoder rightEnc(7,8);
-  }
+okapi::Motor leftDriveF(-10);
+okapi::Motor leftDriveR(5);
+okapi::Motor rightDriveF(20);
+okapi::Motor rightDriveR(-15);
+okapi::Motor lIntake(-8);
+okapi::Motor rIntake(18);
+
+std::shared_ptr<okapi::Motor> angler;
+std::shared_ptr<okapi::MotorGroup> intake;
+
+
+//okapi::ADIEncoder leftEnc(1,2);
+//okapi::ADIEncoder middleEnc(5,6);
+//okapi::ADIEncoder rightEnc(7,8);
+
+}
 }

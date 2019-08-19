@@ -5,8 +5,6 @@ void opcontrol() {
 	auto buttonLeft = robot::master[okapi::ControllerDigital::left];
 	auto buttonRight = robot::master[okapi::ControllerDigital::right];
 
-	robot::IntakeStatus intakeStatus = robot::IntakeStatus::off;
-
 	while(true){
 		robot::chassis->tank(
 			robot::master.getAnalog(okapi::ControllerAnalog::leftY),
@@ -31,31 +29,19 @@ void opcontrol() {
 
 			if(robot::master.getDigital(okapi::ControllerDigital::L1)){
 				robot::angler->setStatus(robot::AnglerStatus::active);
-				intakeStatus = robot::IntakeStatus::off;
+				robot::intake->setStatus(robot::IntakeStatus::off);
 			} else if (robot::master.getDigital(okapi::ControllerDigital::L2)){
 				robot::angler->setStatus(robot::AnglerStatus::stacking);
-				intakeStatus = robot::IntakeStatus::stacking;
+				robot::intake->setStatus(robot::IntakeStatus::stacking);
 			}
 
 			if(robot::master.getDigital(okapi::ControllerDigital::A)){
-				intakeStatus = robot::IntakeStatus::on;
+				robot::intake->setStatus(robot::IntakeStatus::on);
 			} else if(robot::master.getDigital(okapi::ControllerDigital::B)){
-				intakeStatus = robot::IntakeStatus::off;
+				robot::intake->setStatus(robot::IntakeStatus::off);
 			}
 		}
 
-		switch(intakeStatus){
-			case robot::IntakeStatus::on:
-				robot::intake->moveVoltage(12000);
-				break;
-			case robot::IntakeStatus::off:
-				robot::intake->moveVoltage(0);
-				break;
-			case robot::IntakeStatus::stacking:
-				robot::intake->moveVoltage(0);
-				break;
-		}
-		
 		pros::delay(10);
 	}
 }

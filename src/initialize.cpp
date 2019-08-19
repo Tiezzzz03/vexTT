@@ -10,7 +10,7 @@ void initialize() {
 		200, 12000
 	);
 
-	robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({
+	robot::underlying::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({
 			robot::underlying::lIntake,
 			robot::underlying::rIntake
 	}));
@@ -19,7 +19,7 @@ void initialize() {
 	robot::underlying::angler = std::make_shared<okapi::Motor>(9);
 
 	//config motors / sensors
-	robot::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+	robot::underlying::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 	robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 	robot::underlying::angler->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
 
@@ -31,6 +31,12 @@ void initialize() {
 	robot::underlying::angler->tarePosition();
 
 	//make mechanism wrappers
+	robot::intake = std::make_shared<robot::Intake>(
+		robot::underlying::intake,
+		12000,
+		90
+	);
+
 	robot::angler = std::make_shared<robot::Angler>(
 		std::make_unique<okapi::AsyncPosIntegratedController>(
 			robot::underlying::angler, okapi::TimeUtilFactory::create()
