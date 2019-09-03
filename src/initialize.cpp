@@ -10,16 +10,10 @@ void initialize() {
 		200, 12000
 	);
 
-	robot::underlying::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({
-			robot::underlying::lIntake,
-			robot::underlying::rIntake
-	}));
-
 	robot::lift = std::make_shared<okapi::Motor>(19);
 	robot::underlying::angler = std::make_shared<okapi::Motor>(9);
 
 	//config motors / sensors
-	robot::underlying::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 	robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 	robot::underlying::angler->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
 
@@ -32,7 +26,7 @@ void initialize() {
 
 	//make mechanism wrappers
 	robot::intake = std::make_shared<robot::Intake>(
-		robot::underlying::intake,
+		std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({robot::underlying::rIntake, robot::underlying::lIntake})),
 		12000,
 		90
 	);

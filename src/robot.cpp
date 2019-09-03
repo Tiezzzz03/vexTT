@@ -4,9 +4,6 @@
 
 namespace robot {
 
-namespace config {
-}
-
 okapi::Controller master;
 
 std::shared_ptr<okapi::SkidSteerModel> chassis;
@@ -24,7 +21,6 @@ okapi::Motor lIntake(-8);
 okapi::Motor rIntake(18);
 
 std::shared_ptr<okapi::Motor> angler;
-std::shared_ptr<okapi::MotorGroup> intake;
 
 
 //okapi::ADIEncoder leftEnc(1,2);

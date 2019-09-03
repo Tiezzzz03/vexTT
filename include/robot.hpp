@@ -5,8 +5,6 @@
 #include <memory>
 
 namespace robot {
-namespace config {
-}
 
 extern okapi::Controller master;
 

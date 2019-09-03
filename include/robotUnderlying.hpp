@@ -2,8 +2,7 @@
 #include "main.h"
 #include <memory>
 
-namespace robot {
-namespace underlying {
+namespace robot::underlying {
   extern okapi::Motor leftDriveF;
   extern okapi::Motor leftDriveR;
   extern okapi::Motor rightDriveF;
@@ -16,6 +15,5 @@ namespace underlying {
   //extern okapi::ADIEncoder rightEnc;
 
   extern std::shared_ptr<okapi::Motor> angler;
-  extern std::shared_ptr<okapi::MotorGroup> intake;
-}
+
 }

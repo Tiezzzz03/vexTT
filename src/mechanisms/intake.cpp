@@ -7,7 +7,9 @@ Intake::Intake(std::shared_ptr<okapi::AbstractMotor> imotor,
                double istackingDeltaPos):
                motor(imotor), onVoltage(ionVoltage),
                stackingDeltaPos(istackingDeltaPos)
-{}
+{
+  motor->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+}
 
 void Intake::setStatus(IntakeStatus istatus){
   switch(istatus){
