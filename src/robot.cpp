@@ -27,4 +27,10 @@ std::shared_ptr<okapi::Motor> angler;
 //okapi::ADIEncoder rightEnc(7,8);
 
 }
+
+namespace screen {
+  pros::Task *controller;
+  volatile screenMode state;
+  std::string notification;
+}
 }

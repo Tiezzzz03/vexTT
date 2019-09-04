@@ -5,7 +5,7 @@
         "target": "v5",
         "templates": {
             "kernel": {
-                "location": "C:\\Users\\JSpen\\AppData\\Roaming\\PROS\\templates\\kernel@3.1.6",
+                "location": "/home/jspen/.config/pros/templates/kernel@3.1.6",
                 "metadata": {
                     "cold_addr": "58720256",
                     "cold_output": "bin/cold.package.bin",
@@ -248,7 +248,7 @@
                 "version": "3.3.13"
             },
             "screenlib": {
-                "location": "C:\\Users\\JSpen\\AppData\\Roaming\\PROS\\templates\\screenlib@1.0.1",
+                "location": "/home/jspen/.config/pros/templates/screenlib@1.0.2-PR1",
                 "metadata": {
                     "origin": "local"
                 },
@@ -256,13 +256,13 @@
                 "py/object": "pros.conductor.templates.local_template.LocalTemplate",
                 "supported_kernels": "^3.1.6",
                 "system_files": [
-                    "include\\screen\\resources.hpp",
-                    "include\\screen\\field.hpp",
-                    "firmware\\screenlib.a"
+                    "include/screen/resources.hpp",
+                    "firmware/screenlib.a",
+                    "include/screen/field.hpp"
                 ],
                 "target": "v5",
                 "user_files": [],
-                "version": "1.0.1"
+                "version": "1.0.2-PR1"
             }
         },
         "upload_options": {}

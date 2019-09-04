@@ -2,6 +2,8 @@
 #include "robot.hpp"
 #include "robotUnderlying.hpp"
 
+extern void screenControllerFN(void* param);
+
 void initialize() {
 	//init motors / sensors
 
@@ -35,12 +37,15 @@ void initialize() {
 		600,
 		1100
 	);
+
+	robot::screen::controller = new pros::Task(screenControllerFN,
+                                                           NULL,
+                                          TASK_PRIORITY_DEFAULT,
+                                       TASK_STACK_DEPTH_DEFAULT,
+                                                       "Screen");
+  robot::screen::state = screenMode::notification;
 }
 
 void disabled() {
-
-}
-
-void competition_initialize() {
 
 }
