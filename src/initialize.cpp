@@ -21,14 +21,14 @@ void initialize() {
 		std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({robot::underlying::rightDriveF, robot::underlying::rightDriveR})),
 		200, 12000
 	);
-	
-	robot::intake = std::make_shared<robot::Intake>(
+
+	robot::intake = std::make_shared<mechanism::Intake>(
 		std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({robot::underlying::rIntake, robot::underlying::lIntake})),
 		12000,
 		90
 	);
 
-	robot::angler = std::make_shared<robot::Angler>(
+	robot::angler = std::make_shared<mechanism::Angler>(
 		std::make_unique<okapi::AsyncPosIntegratedController>(
 			robot::underlying::angler, 100, okapi::TimeUtilFactory::create()
 		),

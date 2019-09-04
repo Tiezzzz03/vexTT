@@ -7,9 +7,8 @@ namespace robot {
 okapi::Controller master;
 
 std::shared_ptr<okapi::SkidSteerModel> chassis;
-std::shared_ptr<Intake> intake;
-std::shared_ptr<okapi::Motor> lift;
-std::shared_ptr<Angler> angler;
+std::shared_ptr<mechanism::Intake> intake;
+std::shared_ptr<mechanism::Angler> angler;
 
 namespace underlying {
 

@@ -19,26 +19,19 @@ void opcontrol() {
 				robot::angler->reset();
 			}
 		}else{
-			if(robot::master.getDigital(okapi::ControllerDigital::R1)){
-				robot::lift->controllerSet(1);
-			} else if (robot::master.getDigital(okapi::ControllerDigital::R2)){
-				robot::lift->controllerSet(-1);
-			} else {
-				robot::lift->controllerSet(0);
-			}
 
 			if(robot::master.getDigital(okapi::ControllerDigital::L1)){
-				robot::angler->setStatus(robot::AnglerStatus::active);
-				robot::intake->setStatus(robot::IntakeStatus::off);
+				robot::angler->setStatus(mechanism::AnglerStatus::active);
+				robot::intake->setStatus(mechanism::IntakeStatus::off);
 			} else if (robot::master.getDigital(okapi::ControllerDigital::L2)){
-				robot::angler->setStatus(robot::AnglerStatus::stacking);
-				robot::intake->setStatus(robot::IntakeStatus::stacking);
+				robot::angler->setStatus(mechanism::AnglerStatus::stacking);
+				robot::intake->setStatus(mechanism::IntakeStatus::stacking);
 			}
 
 			if(robot::master.getDigital(okapi::ControllerDigital::A)){
-				robot::intake->setStatus(robot::IntakeStatus::on);
+				robot::intake->setStatus(mechanism::IntakeStatus::on);
 			} else if(robot::master.getDigital(okapi::ControllerDigital::B)){
-				robot::intake->setStatus(robot::IntakeStatus::off);
+				robot::intake->setStatus(mechanism::IntakeStatus::off);
 			}
 		}
 

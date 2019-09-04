@@ -2,7 +2,7 @@
 #include "main.h"
 #include "robotUnderlying.hpp"
 
-namespace robot {
+namespace mechanism {
 
 enum class IntakeStatus {
   off, on, stacking

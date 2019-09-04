@@ -2,7 +2,7 @@
 #include "main.h"
 #include "robotUnderlying.hpp"
 
-namespace robot {
+namespace mechanism {
 
 enum class AnglerStatus {
   initial, active, stacking

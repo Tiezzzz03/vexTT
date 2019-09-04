@@ -9,7 +9,7 @@ namespace robot {
 extern okapi::Controller master;
 
 extern std::shared_ptr<okapi::SkidSteerModel> chassis;
-extern std::shared_ptr<Intake> intake;
-extern std::shared_ptr<Angler> angler;
+extern std::shared_ptr<mechanism::Intake> intake;
+extern std::shared_ptr<mechanism::Angler> angler;
 
 }

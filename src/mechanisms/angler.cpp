@@ -1,6 +1,6 @@
 #include "mechanisms/angler.hpp"
 
-namespace robot {
+namespace mechanism {
 
 Angler::Angler(std::unique_ptr<okapi::AsyncPositionController<double, double>> icontroller,
                double iactivePos,
@@ -8,29 +8,29 @@ Angler::Angler(std::unique_ptr<okapi::AsyncPositionController<double, double>> i
                controller(std::move(icontroller)),
                activePos(iactivePos),
                stackingPos(istackingPos),
-               status(robot::AnglerStatus::initial)
+               status(AnglerStatus::initial)
 {}
 
 void Angler::reset(){
   controller->flipDisable();
-  underlying::angler->moveVoltage(-4000);
+  robot::underlying::angler->moveVoltage(-4000);
   do {
     pros::delay(1000);
-  } while(underlying::angler->getActualVelocity() > 0);
+  } while(robot::underlying::angler->getActualVelocity() > 0);
 
-  underlying::angler->tarePosition();
+  robot::underlying::angler->tarePosition();
   controller->flipDisable();
-  setStatus(robot::AnglerStatus::active);
+  setStatus(AnglerStatus::active);
 }
 
-void Angler::setStatus(robot::AnglerStatus istatus){
+void Angler::setStatus(AnglerStatus istatus){
   status = istatus;
   setTarget();
 }
 
 bool Angler::isStacking(){
   return
-    (status == robot::AnglerStatus::stacking) &&
+    (status == AnglerStatus::stacking) &&
     (abs(controller->getError()) < 10);
 }
 
@@ -42,13 +42,13 @@ void Angler::trim(double delta){
 
 void Angler::setTarget(){
   switch(status){
-    case robot::AnglerStatus::initial:
+    case AnglerStatus::initial:
       controller->setTarget(0);
       break;
-    case robot::AnglerStatus::active:
+    case AnglerStatus::active:
       controller->setTarget(activePos);
       break;
-    case robot::AnglerStatus::stacking:
+    case AnglerStatus::stacking:
       controller->setTarget(stackingPos);
       break;
   }

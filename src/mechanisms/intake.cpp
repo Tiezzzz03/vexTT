@@ -1,6 +1,6 @@
 #include "mechanisms/intake.hpp"
 
-namespace robot {
+namespace mechanism {
 
 Intake::Intake(std::shared_ptr<okapi::AbstractMotor> imotor,
                int ionVoltage,
