@@ -10,7 +10,6 @@ extern okapi::Controller master;
 
 extern std::shared_ptr<okapi::SkidSteerModel> chassis;
 extern std::shared_ptr<Intake> intake;
-extern std::shared_ptr<okapi::Motor> lift;
 extern std::shared_ptr<Angler> angler;
 
 }

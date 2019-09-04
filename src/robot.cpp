@@ -13,12 +13,12 @@ std::shared_ptr<Angler> angler;
 
 namespace underlying {
 
-okapi::Motor leftDriveF(-10);
-okapi::Motor leftDriveR(5);
-okapi::Motor rightDriveF(20);
-okapi::Motor rightDriveR(-15);
-okapi::Motor lIntake(-8);
-okapi::Motor rIntake(18);
+okapi::Motor leftDriveF(0);
+okapi::Motor leftDriveR(0);
+okapi::Motor rightDriveF(0);
+okapi::Motor rightDriveR(0);
+okapi::Motor lIntake(0);
+okapi::Motor rIntake(0);
 
 std::shared_ptr<okapi::Motor> angler;
 
