@@ -2,6 +2,8 @@
 
 namespace robot {
 
+okapi::Controller controller;
+
 FILE *logFile;
 
 std::shared_ptr<okapi::Motor> angler;
@@ -13,6 +15,6 @@ std::shared_ptr<okapi::ADIEncoder> lEnc;
 std::shared_ptr<okapi::ADIEncoder> rEnc;
 std::shared_ptr<okapi::ADIEncoder> mEnc;
 
-std::shared_ptr<okapi::OdomChassisController> chassis;
+std::shared_ptr<okapi::ChassisController> chassis;
 
 }

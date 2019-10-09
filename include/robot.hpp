@@ -3,6 +3,8 @@
 
 namespace robot {
 
+extern okapi::Controller controller;
+
 extern FILE *logFile;
 
 extern std::shared_ptr<okapi::Motor> angler;
@@ -14,6 +16,6 @@ extern std::shared_ptr<okapi::ADIEncoder> lEnc;
 extern std::shared_ptr<okapi::ADIEncoder> rEnc;
 extern std::shared_ptr<okapi::ADIEncoder> mEnc;
 
-extern std::shared_ptr<okapi::OdomChassisController> chassis;
+extern std::shared_ptr<okapi::ChassisController> chassis;
 
 }
