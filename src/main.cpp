@@ -14,7 +14,7 @@ inline void initChassis(){
 }
 
 void initialize() {
-  okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
+  okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/usd/tt/log.txt", okapi::Logger::LogLevel::debug));
 
   robot::angler = std::make_shared<okapi::Motor>(-1);
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-2,10}));
@@ -44,21 +44,26 @@ void opcontrol() {
   if(!robot::chassis) initChassis();
 
   while(true){
-    robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
-                                     robot::controller.getAnalog(okapi::ControllerAnalog::rightY));
+    if(robot::controller.getDigital(okapi::ControllerDigital::L2)){
+      robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.5,
+                                       robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.5);
+    }else{
+      robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
+                                       robot::controller.getAnalog(okapi::ControllerAnalog::rightY));
+    }
 
     if(robot::controller.getDigital(okapi::ControllerDigital::R1)){
       robot::intake->moveVoltage(12000);
     }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
       robot::intake->moveVoltage(6000);
     }else if(robot::controller.getDigital(okapi::ControllerDigital::Y)){
-      robot::intake->moveVoltage(-12000);
+      robot::intake->moveVoltage(-6000);
     }else{
       robot::intake->moveVoltage(0);
     }
 
     if(robot::controller.getDigital(okapi::ControllerDigital::right)){
-      robot::angler->moveVelocity(50);
+      robot::angler->moveVelocity(40);
     }else if(robot::controller.getDigital(okapi::ControllerDigital::L1)){
       robot::angler->moveVelocity(-100);
     }else{
