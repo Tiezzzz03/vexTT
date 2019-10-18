@@ -1,5 +1,4 @@
-#ifndef ROUTINES_HPP_
-#define ROUTINES_HPP_
+#pragma once
 #include "screen/api.hpp"
 #include <functional>
 #include <string>
@@ -23,5 +22,3 @@ public:
 
 extern std::vector<AutonomousRoutine> routines;
 extern int selection;
-
-#endif

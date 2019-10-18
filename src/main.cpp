@@ -56,8 +56,7 @@ void opcontrol() {
 
   while(true){
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){
-      robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.5,
-                                       robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.5);
+      robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.5, 0);
     }else{
       robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
                                        robot::controller.getAnalog(okapi::ControllerAnalog::rightY));

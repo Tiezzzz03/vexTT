@@ -47,6 +47,8 @@ void screenControllerFN(void* param){
             field = nullptr;
           }
 
+          lv_obj_clean(scr);
+
           notification_label = lv_label_create(scr, NULL);
           lv_label_set_long_mode(notification_label, LV_LABEL_LONG_BREAK);
           lv_label_set_align(notification_label, LV_LABEL_ALIGN_CENTER);
@@ -63,6 +65,8 @@ void screenControllerFN(void* param){
       case screenMode::selection:
         if(lastScreenState != robot::screen::state){
           std::cout << "screen controller - initializing selection mode\n";
+
+          lv_obj_clean(scr);
 
           field = new screen::ttField(scr);
 
@@ -152,6 +156,8 @@ void screenControllerFN(void* param){
             delete field;
             field = nullptr;
           }
+
+          lv_obj_clean(scr);
 
           lastScreenState = robot::screen::state;
         }
