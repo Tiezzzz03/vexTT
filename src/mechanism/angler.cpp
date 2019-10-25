@@ -57,9 +57,6 @@ void Angler::loop(){
   while(true){
     currentPos = motor->getPosition();
 
-    //if(target != lastTarget){
-    //  controller->reset();
-    //}
     lastTarget = target;
 
     if(target <= restingPos){
