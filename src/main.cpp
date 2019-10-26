@@ -7,16 +7,33 @@ using namespace okapi::literals;
 void disabled() {}
 
 void competition_initialize() {
+  /* this funciton runs immediatly after initialization when plugged into a
+   * competetion / tournament switch
+   *
+   * setting this will bring the thread defined in screenController.cpp to
+   * autonomous selection mode
+  **/
   robot::screen::state = screenMode::selection;
 }
 
 void autonomous() {
+  /* this function is run when directed by a competition / tournament switch
+   * this will follow the function pointer "run" to the selected
+   * AutonomousRoutines object. All of these routines are defined in routines.cpp
+  **/
+
   routines[selection].run();
 }
 
 void opcontrol() {
+  /* this function runs when directed by a competition / tournament switch
+   * or when not connected to either
+  **/
+
+  // set the screen to display notification (random text for the time being)
   robot::screen::state = screenMode::notification;
 
+  // disable the profile controller, as the driver will control it manually
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);
 
   while(true){

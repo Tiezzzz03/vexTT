@@ -17,6 +17,17 @@ void Angler::stack(){
   target.store(verticalPos);
 }
 
+bool Angler::isSettled(){
+  auto currentPos = motor->getPosition();
+
+  if(target <= restingPos){
+    return currentPos < restingPos;
+
+  }else{
+    return currentPos > pidThreshold && controller->isSettled();
+  }
+}
+
 void Angler::reset(){
   target.store(restingPos);
 }

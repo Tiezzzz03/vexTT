@@ -12,7 +12,19 @@ AutonomousRoutine(
   &lv_style_plain,
   [](screen::ttField *field) { field->finishDrawing(); },
   [](){},
-  [](){}
+  [](){
+    robot::angler->getTask()->suspend();
+    robot::angler->getMotor()->moveVoltage(12000);
+    robot::intake->moveVoltage(-10000);
+    while(robot::angler->getMotor()->getPosition() + 100 < Angler::verticalPos) {pros::delay(10);}
+
+    robot::angler->getTask()->resume();
+    robot::angler->reset();
+    robot::intake->moveVoltage(10000);
+    while(!robot::angler->isSettled()) {pros::delay(10);}
+
+    robot::intake->moveVoltage(0);
+  }
 ),
 
 AutonomousRoutine(

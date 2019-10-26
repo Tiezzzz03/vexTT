@@ -17,6 +17,8 @@ public:
 
   void reset();
 
+  bool isSettled();
+
   void trim(int trimDistance);
 
   void tare();
