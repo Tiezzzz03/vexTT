@@ -26,6 +26,7 @@ void autonomous() {
 }
 
 void opcontrol() {
+  robot::chassis->getModel()->setMaxVelocity(200);
   /* this function runs when directed by a competition / tournament switch
    * or when not connected to either
   **/
@@ -58,6 +59,12 @@ void opcontrol() {
       robot::angler->stack();
     }else if(robot::controller.getDigital(okapi::ControllerDigital::L1)){
       robot::angler->reset();
+    }else if(robot::controller.getDigital(okapi::ControllerDigital::down)){
+      robot::angler->getTask()->suspend();
+      robot::angler->getMotor()->moveVoltage(-12000);
+    }else if(robot::controller.getDigital(okapi::ControllerDigital::left)){
+      robot::angler->getTask()->resume();
+      robot::angler->tare();
     }
 
     pros::delay(10);

@@ -16,6 +16,7 @@ AutonomousRoutine(
     robot::angler->getTask()->suspend();
     robot::angler->getMotor()->moveVoltage(12000);
     robot::intake->moveVoltage(-10000);
+    robot::chassis->moveDistance(4_in);
     while(robot::angler->getMotor()->getPosition() + 100 < Angler::verticalPos) {pros::delay(10);}
 
     robot::angler->getTask()->resume();
@@ -35,24 +36,37 @@ AutonomousRoutine(
     field->draw(screen::scoringZone::nearRed, screen::color::orange, 5);
     field->finishDrawing();
   },
+  [](){},
   [](){
-    robot::chassisProfiler->generatePath({{0_in, 0_in, 0_deg}, {4_ft, 0_ft, 0_deg}}, "nearCubeApproach", {0.5, 2, 10});
-    robot::chassisProfiler->generatePath({{0_in, 0_in, 0_deg}, {3_ft, -1_ft, -45_deg}}, "nearCubeRecede");
-    robot::chassisProfiler->generatePath({{0_in, 0_in, 45_deg}, {0_ft, 2_ft, 135_deg}}, "nearZoneApproach");
-  },
-  [](){
-    robot::intake->moveVoltage(12000);
-    robot::chassisProfiler->setTarget("nearCubeApproach");
-    robot::chassisProfiler->waitUntilSettled();
+    robot::chassis->getModel()->setMaxVelocity(75);
+    robot::chassis->moveDistance(-5_ft);
+    pros::delay(500);
+    robot::chassis->moveDistance(1_ft);
+
+    /*robot::angler->getTask()->suspend();
+    robot::angler->getMotor()->moveVoltage(12000);
+    robot::intake->moveVoltage(-10000);
+    robot::chassis->moveDistance(4_in);
+    while(robot::angler->getMotor()->getPosition() + 100 < Angler::verticalPos) {pros::delay(10);}
+
+    robot::angler->getTask()->resume();
+    robot::angler->reset();
+    robot::intake->moveVoltage(10000);
+    while(!robot::angler->isSettled()) {pros::delay(10);}
+
+    robot::chassis->setMaxVelocity(100);
+    robot::chassis->moveDistance(4_ft);
 
     robot::intake->moveVoltage(0);
-    robot::chassisProfiler->setTarget("nearCubeRecede", true);
-    robot::chassisProfiler->waitUntilSettled();
+    robot::chassis->turnAngle()
 
     robot::chassisProfiler->setTarget("nearZoneApproach");
     robot::chassisProfiler->waitUntilSettled();
 
     robot::angler->stack();
+    while(!robot::angler->isSettled()) {pros::delay(10);}
+
+    robot::chassis->moveDistance(-1_ft);*/
   }
 )
 

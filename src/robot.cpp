@@ -54,7 +54,7 @@ void initialize() {
 
   robot::chassisProfiler = okapi::AsyncMotionProfileControllerBuilder()
                       .withOutput(robot::chassis)
-                      .withLimits({0, 0, 0})
+                      .withLimits({0.5, 2, 10})
                       .buildMotionProfileController();
 
 
