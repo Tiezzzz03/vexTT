@@ -11,13 +11,17 @@ public:
   static std::atomic_int restingPos;
   static std::atomic_int pidThreshold;
   static std::atomic_int verticalPos;
-
+  
 
   void stack();
+
+  void prime();
 
   void reset();
 
   bool isSettled();
+
+  void waitUntilSettled();
 
   void trim(int trimDistance);
 

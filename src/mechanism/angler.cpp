@@ -15,6 +15,16 @@ Angler::~Angler(){
 
 void Angler::stack(){
   target.store(verticalPos);
+  controller->setTarget(target);
+}
+
+void Angler::prime(){
+  target.store(pidThreshold);
+  controller->setTarget(target);
+}
+
+void Angler::reset(){
+  target.store(restingPos);
 }
 
 bool Angler::isSettled(){
@@ -28,14 +38,16 @@ bool Angler::isSettled(){
   }
 }
 
-void Angler::reset(){
-  target.store(restingPos);
+void Angler::waitUntilSettled(){
+  while(!isSettled()){
+    pros::delay(50);
+  }
 }
 
 void Angler::trim(int trimDistance){
-  restingPos   -= trimDistance;
-  pidThreshold -= trimDistance;
-  verticalPos  -= trimDistance;
+  restingPos   += trimDistance;
+  pidThreshold += trimDistance;
+  verticalPos  += trimDistance;
 }
 
 void Angler::tare(){
@@ -62,8 +74,6 @@ void Angler::loop(){
   int currentPos = 0;
   int lastTarget = target;
   double power = 0;
-
-  controller->setTarget(verticalPos);
 
   while(true){
     currentPos = motor->getPosition();

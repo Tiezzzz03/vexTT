@@ -45,10 +45,11 @@ AutonomousRoutine(
 
     robot::chassis->getModel()->setMaxVelocity(200);
     robot::chassisProfiler->setTarget("zoneAdvance");
+    robot::angler->prime();
     robot::chassisProfiler->waitUntilSettled();
 
     robot::angler->stack();
-    while(!robot::angler->isSettled()) { pros::delay(50); }
+    robot::angler->waitUntilSettled();
 
     robot::chassis->getModel()->setMaxVelocity(80);
     robot::chassis->moveDistance(-6_in);
