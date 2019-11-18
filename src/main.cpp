@@ -47,21 +47,27 @@ void opcontrol() {
 
     if(robot::controller.getDigital(okapi::ControllerDigital::R1)){
       robot::intake->moveVoltage(12000);
+
     }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
       robot::intake->moveVoltage(6000);
+
     }else if(robot::controller.getDigital(okapi::ControllerDigital::Y)){
       robot::intake->moveVoltage(-6000);
+      
     }else{
       robot::intake->moveVoltage(0);
     }
 
     if(robot::controller.getDigital(okapi::ControllerDigital::right)){
       robot::angler->stack();
+
     }else if(robot::controller.getDigital(okapi::ControllerDigital::L1)){
       robot::angler->reset();
+
     }else if(robot::controller.getDigital(okapi::ControllerDigital::down)){
       robot::angler->getTask()->suspend();
       robot::angler->getMotor()->moveVoltage(-12000);
+
     }else if(robot::controller.getDigital(okapi::ControllerDigital::left)){
       robot::angler->getTask()->resume();
       robot::angler->tare();

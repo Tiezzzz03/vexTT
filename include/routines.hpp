@@ -10,16 +10,14 @@ public:
   lv_style_t* textStyle;
 
   std::function<void(screen::ttField*)> print;
-  std::function<void()> init;
   std::function<void()> run;
 
   AutonomousRoutine(const char* ititle, lv_style_t* istyle,
                     std::function<void(screen::ttField*)> iprint,
-                    std::function<void()> iinit,
-                    std::function<void()> irun
-                    ):
+                    std::function<void()> irun):
+                    
                     title(ititle), textStyle(istyle),
-                    print(iprint), init(iinit), run(irun)
+                    print(iprint), run(irun)
   {}
 };
 

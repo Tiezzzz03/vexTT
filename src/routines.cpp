@@ -11,18 +11,9 @@ AutonomousRoutine(
   "Disable",
   &lv_style_plain,
   [](screen::ttField *field) { field->finishDrawing(); },
-  [](){},
   [](){
-    robot::angler->getTask()->suspend();
-    robot::angler->getMotor()->moveVoltage(12000);
-    robot::intake->moveVoltage(-10000);
-    robot::chassis->moveDistance(4_in);
-    while(robot::angler->getMotor()->getPosition() + 100 < Angler::verticalPos) {pros::delay(10);}
-
-    robot::angler->getTask()->resume();
-    robot::angler->reset();
-    robot::intake->moveVoltage(10000);
-    while(!robot::angler->isSettled()) {pros::delay(10);}
+    robot::intake->moveVoltage(-12000);
+    pros::delay(1000);
 
     robot::intake->moveVoltage(0);
   }
@@ -30,43 +21,38 @@ AutonomousRoutine(
 
 AutonomousRoutine(
   "Small Zone Red",
-  &screen::resources::redAlliance,
+  &screen::resources::redText,
   [](screen::ttField *field) {
     field->draw(screen::cubeGroup::left4, 0);
     field->draw(screen::scoringZone::nearRed, screen::color::orange, 5);
     field->finishDrawing();
   },
-  [](){},
   [](){
-    robot::chassis->getModel()->setMaxVelocity(75);
-    robot::chassis->moveDistance(-5_ft);
+    robot::intake->moveVoltage(-12000);
     pros::delay(500);
-    robot::chassis->moveDistance(1_ft);
 
-    /*robot::angler->getTask()->suspend();
-    robot::angler->getMotor()->moveVoltage(12000);
-    robot::intake->moveVoltage(-10000);
-    robot::chassis->moveDistance(4_in);
-    while(robot::angler->getMotor()->getPosition() + 100 < Angler::verticalPos) {pros::delay(10);}
+    robot::chassisProfiler->loadPath("/usd/tt/paths/cubeAdvance", "cubeAdvance"); //60% speed, low accel, ~40_in
+    robot::chassisProfiler->setTarget("cubeAdvance");
+    pros::delay(500);
 
-    robot::angler->getTask()->resume();
-    robot::angler->reset();
-    robot::intake->moveVoltage(10000);
-    while(!robot::angler->isSettled()) {pros::delay(10);}
+    robot::intake->moveVoltage(12000);
+    robot::chassisProfiler->waitUntilSettled();
 
-    robot::chassis->setMaxVelocity(100);
-    robot::chassis->moveDistance(4_ft);
+    robot::chassis->getModel()->setMaxVelocity(80);
+    robot::chassis->turnAngleAsync(115_deg);
+    robot::chassisProfiler->loadPath("/usd/tt/paths/smallZoneAdvance", "zoneAdvance"); //60% speed, low accel, ~48_in
+    robot::chassis->waitUntilSettled();
 
-    robot::intake->moveVoltage(0);
-    robot::chassis->turnAngle()
-
-    robot::chassisProfiler->setTarget("nearZoneApproach");
+    robot::chassis->getModel()->setMaxVelocity(200);
+    robot::chassisProfiler->setTarget("zoneAdvance");
     robot::chassisProfiler->waitUntilSettled();
 
     robot::angler->stack();
-    while(!robot::angler->isSettled()) {pros::delay(10);}
+    while(!robot::angler->isSettled()) { pros::delay(50); }
 
-    robot::chassis->moveDistance(-1_ft);*/
+    robot::chassis->getModel()->setMaxVelocity(80);
+    robot::chassis->moveDistance(-6_in);
+    robot::chassis->getModel()->setMaxVelocity(200);
   }
 )
 

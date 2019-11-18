@@ -116,10 +116,6 @@ void screenControllerFN(void* param){
           lastScreenState = robot::screen::state;
         }
 
-        if(!selected && lv_btn_get_state(confirm_button) == LV_BTN_STATE_PR){
-          routines[selection].init();
-        }
-
         selected = selected || lv_btn_get_state(confirm_button) == LV_BTN_STATE_PR;
 
         if(!selected){
