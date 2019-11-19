@@ -18,9 +18,9 @@ public:
 
   void raise();
 
-  void phaseReset();
-
   void lower();
+
+  bool isRaised();
 
   bool isSettled();
 

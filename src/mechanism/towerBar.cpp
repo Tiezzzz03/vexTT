@@ -19,16 +19,12 @@ void TowerBar::raise(){
     controller->setTarget(raisedPos);
 }
 
-void TowerBar::phaseReset(){
-    if(motor->getPosition() >= threshold){
-        raise();
-    }else{
-        lower();
-    }
-}
-
 void TowerBar::lower(){
     controller->setTarget(restingPos);
+}
+
+bool TowerBar::isRaised(){
+    return motor->getPosition() >= threshold;
 }
 
 bool TowerBar::isSettled(){
