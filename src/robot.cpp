@@ -7,6 +7,7 @@ namespace robot {
 okapi::Controller controller;
 
 std::shared_ptr<Angler> angler;
+std::shared_ptr<okapi::Motor> lift;
 std::shared_ptr<okapi::MotorGroup> intake;
 std::shared_ptr<okapi::MotorGroup> lDrive;
 std::shared_ptr<okapi::MotorGroup> rDrive;
@@ -28,8 +29,6 @@ namespace screen {
 
 extern void screenControllerFN(void* param);
 
-
-
 std::atomic_int Angler::restingPos = 150;
 std::atomic_int Angler::pidThreshold = 1800;
 std::atomic_int Angler::verticalPos = 4500;
@@ -39,6 +38,7 @@ void initialize() {
 
   robot::angler = std::make_shared<Angler>(std::make_shared<okapi::Motor>(-1),
     okapi::IterativePosPIDController::Gains({0.00075, 0, 0.00005, 0}));
+  robot::lift = std::make_shared<okapi::Motor>(0);
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-2,10}));
   robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({ 8, 9}));
   robot::rDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-3,-4}));

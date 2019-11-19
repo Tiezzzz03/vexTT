@@ -11,6 +11,7 @@ namespace robot {
 extern okapi::Controller controller;
 
 extern std::shared_ptr<Angler> angler;
+extern std::shared_ptr<okapi::Motor> lift;
 extern std::shared_ptr<okapi::MotorGroup> intake;
 extern std::shared_ptr<okapi::MotorGroup> lDrive;
 extern std::shared_ptr<okapi::MotorGroup> rDrive;
