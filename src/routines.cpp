@@ -10,7 +10,9 @@ std::vector<AutonomousRoutine> routines = {
 AutonomousRoutine(
   "Disable",
   &lv_style_plain,
-  [](screen::ttField *field) { field->finishDrawing(); },
+  [](screen::ttField *field) {
+    field->finishDrawing(); 
+  },
   [](){
     robot::intake->moveVoltage(-12000);
     pros::delay(1000);
