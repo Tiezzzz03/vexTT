@@ -37,7 +37,9 @@ void opcontrol() {
   // disable the profile controller, as the driver will control it manually
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);
 
-  okapi::ControllerButton L2 = robot::controller[okapi::ControllerDigital::L2];
+  okapi::ControllerButton buttonL2 = robot::controller[okapi::ControllerDigital::L2];
+
+  robot::towerBar->lower();
 
   while(true){
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){
@@ -75,8 +77,8 @@ void opcontrol() {
       robot::angler->tare();
     }
 
-    if(L2.changed()){
-      if(L2.isPressed()){
+    if(buttonL2.changed()){
+      if(buttonL2.isPressed()){
         if(robot::towerBar->isRaised()){
           robot::towerBar->lower();
         }else{
