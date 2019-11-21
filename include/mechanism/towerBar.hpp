@@ -45,13 +45,3 @@ private:
   std::unique_ptr<okapi::IterativePosPIDController> controller{nullptr};
   std::shared_ptr<okapi::AbstractMotor> motor{nullptr};
 };
-
-/* button is pressed:
- *  go to minimumPos
- *  once there, go to raisedPos
- *  if at any point during this the button is released, go to resting/raised based on which side of threshold
- *  set flag
- * 
- * 
- * 
-**/

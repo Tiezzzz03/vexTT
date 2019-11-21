@@ -38,6 +38,7 @@ void opcontrol() {
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);
 
   okapi::ControllerButton buttonL2 = robot::controller[okapi::ControllerDigital::L2];
+  okapi::ControllerButton buttonDown = robot::controller[okapi::ControllerDigital::down];
 
   robot::towerBar->lower();
 
@@ -68,13 +69,15 @@ void opcontrol() {
     }else if(robot::controller.getDigital(okapi::ControllerDigital::L1)){
       robot::angler->reset();
 
-    }else if(robot::controller.getDigital(okapi::ControllerDigital::down)){
-      robot::angler->getTask()->suspend();
-      robot::angler->getMotor()->moveVoltage(-12000);
+    }else if(buttonDown.changed()){
+      if(buttonDown.isPressed()){
+        robot::angler->getTask()->suspend();
+        robot::angler->getMotor()->moveVoltage(-12000);
 
-    }else if(robot::controller.getDigital(okapi::ControllerDigital::left)){
-      robot::angler->getTask()->resume();
-      robot::angler->tare();
+      }else{
+        robot::angler->getTask()->resume();
+        robot::angler->tare();
+      }
     }
 
     if(buttonL2.changed()){
