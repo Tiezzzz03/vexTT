@@ -1,7 +1,6 @@
 #pragma once
 #include "main.h"
 #include "mechanism/angler.hpp"
-#include "mechanism/towerBar.hpp"
 
 enum class screenMode{
   disabled, notification, selection
@@ -12,7 +11,6 @@ namespace robot {
 extern okapi::Controller controller;
 
 extern std::shared_ptr<Angler> angler;
-extern std::shared_ptr<TowerBar> towerBar;
 extern std::shared_ptr<okapi::MotorGroup> intake;
 extern std::shared_ptr<okapi::MotorGroup> lDrive;
 extern std::shared_ptr<okapi::MotorGroup> rDrive;

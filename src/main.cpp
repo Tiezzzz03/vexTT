@@ -40,11 +40,8 @@ void opcontrol() {
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);
 
   // in order to read rising/falling cases, button objects are needed
-  okapi::ControllerButton buttonL2 = robot::controller[okapi::ControllerDigital::L2];
   okapi::ControllerButton buttonDown = robot::controller[okapi::ControllerDigital::down];
 
-  // move the towerBar to its resting position
-  robot::towerBar->lower();
 
   while(true){
 
@@ -99,30 +96,6 @@ void opcontrol() {
       }else{
         robot::angler->getTask()->resume();
         robot::angler->tare();
-      }
-    }
-
-    /*
-     * Tower Bar control (async)
-     * L2 ->
-     *    when pressed, begin motion to top/bottom, opposed to where it currently is
-     *    if the button is released while the motion is happening, return to its 
-     *    resting position of its current side (up/down)
-     * 
-    **/
-    if(buttonL2.changed()){
-      if(buttonL2.isPressed()){
-        if(robot::towerBar->isRaised()){
-          robot::towerBar->lower();
-        }else{
-          robot::towerBar->intake();
-        }
-      }else{
-        if(robot::towerBar->isRaised()){
-          robot::towerBar->raise();
-        }else{
-          robot::towerBar->lower();
-        }
       }
     }
 

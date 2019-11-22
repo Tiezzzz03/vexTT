@@ -7,7 +7,6 @@ namespace robot {
 okapi::Controller controller;
 
 std::shared_ptr<Angler> angler;
-std::shared_ptr<TowerBar> towerBar;
 std::shared_ptr<okapi::MotorGroup> intake;
 std::shared_ptr<okapi::MotorGroup> lDrive;
 std::shared_ptr<okapi::MotorGroup> rDrive;
@@ -33,11 +32,6 @@ std::atomic_int Angler::restingPos = 150;
 std::atomic_int Angler::pidThreshold = 1800;
 std::atomic_int Angler::verticalPos = 4500;
 
-std::atomic_int TowerBar::minimumPos = 0;
-std::atomic_int TowerBar::restingPos = 450;
-std::atomic_int TowerBar::threshold = 1500;
-std::atomic_int TowerBar::raisedPos = 2250;
-
 
 void initialize() {
   okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
@@ -46,10 +40,6 @@ void initialize() {
     std::make_shared<okapi::Motor>(-1),
     okapi::IterativePosPIDController::Gains({0.00075, 0, 0.00005, 0}));
     
-  robot::towerBar = std::make_shared<TowerBar>(
-    std::make_shared<okapi::Motor>(-20),
-    okapi::IterativePosPIDController::Gains({0.001, 0, 0, 0}));
-
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-2,10}));
   robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({ 8, 9}));
   robot::rDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-3,-4}));
@@ -75,7 +65,6 @@ void initialize() {
   robot::angler->getMotor()->setGearing(okapi::AbstractMotor::gearset::red);
 
   robot::angler->startThread();
-  robot::towerBar->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
   robot::screen::notification = "You wouldn't get it";
 }
