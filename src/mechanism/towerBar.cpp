@@ -4,6 +4,7 @@ TowerBar::TowerBar(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::Iterativ
     motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::create(), std::move(iderivativeFilter))){
         
     tare();
+    controller->setOutputLimits(0.5,-0.5);
 }
 
 TowerBar::~TowerBar(){
@@ -65,13 +66,20 @@ void TowerBar::trampoline(void *towerBar){
 }
 
 void TowerBar::loop(){
+    double power = 0;
+
     while(true){
-        if(controller->getTarget() == minimumPos && isSettled()){
+        if(motor->getPosition() < minimumPos){
             raise();
         }
 
-        motor->controllerSet(controller->step(motor->getPosition()));
+        if(controller->getTarget() == minimumPos){
+            power = -1;
+        }else{
+            power = controller->step(motor->getPosition());
+        }
 
+        motor->controllerSet(power);
         pros::delay(10);
     }
 }

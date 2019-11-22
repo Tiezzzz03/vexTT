@@ -34,9 +34,9 @@ std::atomic_int Angler::pidThreshold = 1800;
 std::atomic_int Angler::verticalPos = 4500;
 
 std::atomic_int TowerBar::minimumPos = 0;
-std::atomic_int TowerBar::restingPos = 0;
-std::atomic_int TowerBar::threshold = 0;
-std::atomic_int TowerBar::raisedPos = 0;
+std::atomic_int TowerBar::restingPos = 450;
+std::atomic_int TowerBar::threshold = 1500;
+std::atomic_int TowerBar::raisedPos = 2250;
 
 
 void initialize() {
@@ -47,8 +47,8 @@ void initialize() {
     okapi::IterativePosPIDController::Gains({0.00075, 0, 0.00005, 0}));
     
   robot::towerBar = std::make_shared<TowerBar>(
-    std::make_shared<okapi::Motor>(0),
-    okapi::IterativePosPIDController::Gains({0.00075, 0, 0.00005, 0}));
+    std::make_shared<okapi::Motor>(-20),
+    okapi::IterativePosPIDController::Gains({0.001, 0, 0, 0}));
 
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-2,10}));
   robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({ 8, 9}));
@@ -75,6 +75,7 @@ void initialize() {
   robot::angler->getMotor()->setGearing(okapi::AbstractMotor::gearset::red);
 
   robot::angler->startThread();
+  robot::towerBar->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
   robot::screen::notification = "You wouldn't get it";
 }
