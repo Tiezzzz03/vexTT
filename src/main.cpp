@@ -4,6 +4,8 @@
 
 using namespace okapi::literals;
 
+extern void generatePaths();
+
 void disabled() {}
 
 void competition_initialize() {
@@ -97,6 +99,10 @@ void opcontrol() {
         robot::angler->getTask()->resume();
         robot::angler->tare();
       }
+    }
+
+    if(robot::controller.getDigital(okapi::ControllerDigital::X) && robot::controller.getDigital(okapi::ControllerDigital::B)){
+      generatePaths();
     }
 
     pros::delay(10);

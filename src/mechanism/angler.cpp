@@ -1,11 +1,11 @@
 #include "angler.hpp"
 
 Angler::Angler(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
-  motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::create(), std::move(iderivativeFilter))){
+  motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
 
   target.store(0);
   tare();
-  controller->setOutputLimits(0.3, -0.3);
+  controller->setOutputLimits(0.4, -0.4);
 }
 
 Angler::~Angler(){
@@ -84,7 +84,7 @@ void Angler::loop(){
       if(currentPos < restingPos){
         power = 0;
       }else{
-        power = -1;
+        power = -0.8;
       }
 
     }else{
