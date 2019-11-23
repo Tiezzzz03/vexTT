@@ -28,8 +28,8 @@ namespace screen {
 
 extern void screenControllerFN(void* param);
 
-std::atomic_int Angler::restingPos = 150;
-std::atomic_int Angler::pidThreshold = 1800;
+std::atomic_int Angler::restingPos = 200;
+std::atomic_int Angler::pidThreshold = 1600;
 std::atomic_int Angler::verticalPos = 4500;
 
 
@@ -37,7 +37,7 @@ void initialize() {
   okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
 
   robot::angler = std::make_shared<Angler>(
-    std::make_shared<okapi::Motor>(-1),
+    std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-1, 7})),
     okapi::IterativePosPIDController::Gains({0.00075, 0, 0.00005, 0}));
     
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-2,10}));
@@ -55,7 +55,7 @@ void initialize() {
 
   robot::chassisProfiler = okapi::AsyncMotionProfileControllerBuilder()
                       .withOutput(robot::chassis)
-                      .withLimits({0.5, 2, 10})
+                      .withLimits({1, 2, 10})
                       .buildMotionProfileController();
 
 
