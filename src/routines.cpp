@@ -29,7 +29,7 @@ AutonomousRoutine(
   },
   [](){
     robot::chassis->getModel()->setMaxVelocity(100);
-    robot::chassis->moveDistance(40_in);
+    robot::chassis->moveDistance(12_in);
 
     robot::chassis->moveDistance(-12_in);
     
