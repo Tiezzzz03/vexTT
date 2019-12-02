@@ -46,6 +46,7 @@ void Angler::waitUntilSettled(){
 
 void Angler::trim(int trimDistance){
   restingPos   += trimDistance;
+  primedPos    += trimDistance;
   pidThreshold += trimDistance;
   verticalPos  += trimDistance;
 }
