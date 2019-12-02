@@ -19,7 +19,7 @@ void Angler::stack(){
 }
 
 void Angler::prime(){
-  target.store(pidThreshold);
+  target.store(primedPos);
   controller->setTarget(target);
 }
 
@@ -72,13 +72,10 @@ void Angler::trampoline(void *angler){
 
 void Angler::loop(){
   int currentPos = 0;
-  int lastTarget = target;
   double power = 0;
 
   while(true){
     currentPos = motor->getPosition();
-
-    lastTarget = target;
 
     if(target <= restingPos){
       if(currentPos < restingPos){

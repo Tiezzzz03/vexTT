@@ -29,7 +29,8 @@ namespace screen {
 extern void screenControllerFN(void* param);
 
 std::atomic_int Angler::restingPos = 200;
-std::atomic_int Angler::pidThreshold = 1600;
+std::atomic_int Angler::primedPos = 1600;
+std::atomic_int Angler::pidThreshold = 1500;
 std::atomic_int Angler::verticalPos = 4500;
 
 
