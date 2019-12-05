@@ -3,7 +3,7 @@
 
 using namespace okapi::literals;
 
-int selection = 0;
+int selection = 2;
 
 std::vector<AutonomousRoutine> routines = {
 
@@ -50,8 +50,9 @@ AutonomousRoutine(
     pros::delay(500);
 
     //robot::chassisProfiler->loadPath("/usd/tt/paths/cubeAdvance", "cubeAdvance"); //60% speed, low accel, ~40_in
-    robot::chassisProfiler->generatePath({{0_in, 0_in, 0_deg}, {40_in, 0_in, 0_deg}}, "cubeAdvance", {0.4, 1, 5.0});
-    
+    robot::chassisProfiler->generatePath({{0_in, 0_in, 0_deg}, {36_in, 0_in, 0_deg}}, "cubeAdvance", {0.4, 1, 5.0});
+    robot::chassis->moveDistance(6_in);
+    robot::chassis->moveDistance(-2_in);
     robot::chassisProfiler->setTarget("cubeAdvance");
     pros::delay(500);
 
@@ -59,7 +60,7 @@ AutonomousRoutine(
     robot::chassisProfiler->waitUntilSettled();
 
     robot::chassis->getModel()->setMaxVelocity(60);
-    robot::chassis->turnAngleAsync(115_deg);
+    robot::chassis->turnAngleAsync(152_deg);
     //robot::chassisProfiler->loadPath("/usd/tt/paths/smallZoneAdvance", "zoneAdvance"); //60% speed, low accel, ~48_in
     robot::chassisProfiler->generatePath({{0_in, 0_in, 0_deg}, {48_in, 0_in, 0_deg}}, "zoneAdvance", {0.6, 0.8, 5.0});
 

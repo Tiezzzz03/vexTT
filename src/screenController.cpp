@@ -64,7 +64,7 @@ void screenControllerFN(void* param){
   lv_obj_t *gifContainer;
   static lv_style_t rainbowStyle;
   lv_style_copy(&rainbowStyle, &lv_style_plain);
-  Gif *ezgif;
+  Gif *ezgif = nullptr;
   uint16_t colorSeed = 0;
   
   //diagnostic
