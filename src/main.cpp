@@ -98,6 +98,7 @@ void opcontrol() {
       }else{
         robot::angler->getTask()->resume();
         robot::angler->tare();
+        robot::angler->reset();
       }
     }
 
