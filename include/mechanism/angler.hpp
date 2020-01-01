@@ -9,14 +9,11 @@ public:
   ~Angler();
 
   static std::atomic_int restingPos;
-  static std::atomic_int primedPos;
   static std::atomic_int pidThreshold;
   static std::atomic_int verticalPos;
   
 
   void stack();
-
-  void prime();
 
   void reset();
 

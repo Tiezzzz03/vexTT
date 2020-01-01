@@ -18,11 +18,6 @@ void Angler::stack(){
   controller->setTarget(target);
 }
 
-void Angler::prime(){
-  target.store(primedPos);
-  controller->setTarget(target);
-}
-
 void Angler::reset(){
   target.store(restingPos);
   controller->setTarget(target);
@@ -47,7 +42,6 @@ void Angler::waitUntilSettled(){
 
 void Angler::trim(int trimDistance){
   restingPos   += trimDistance;
-  primedPos    += trimDistance;
   pidThreshold += trimDistance;
   verticalPos  += trimDistance;
 }

@@ -76,16 +76,12 @@ void opcontrol() {
 
     /*
      * Angler/Tray control (async)
-     * L1 -> prime tray (a little over halfway up)
      * L2 -> reset/down tray position
      * L3/right -> stack/up tray position
      * down -> while held, stop task and retract, when released return to normal operation
     **/ 
     if(robot::controller.getDigital(okapi::ControllerDigital::right)){
       robot::angler->stack();
-
-    }else if(robot::controller.getDigital(okapi::ControllerDigital::L1)){
-      robot::angler->prime();
 
     }else if(robot::controller.getDigital(okapi::ControllerDigital::L2)){
       robot::angler->reset();
