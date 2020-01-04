@@ -6,8 +6,8 @@ namespace robot {
 
 okapi::Controller controller;
 
+std::shared_ptr<Lift> lift;
 std::shared_ptr<Angler> angler;
-std::shared_ptr<okapi::Motor> lift;
 std::shared_ptr<okapi::MotorGroup> intake;
 std::shared_ptr<okapi::MotorGroup> lDrive;
 std::shared_ptr<okapi::MotorGroup> rDrive;
@@ -25,9 +25,14 @@ namespace screen {
 
 extern void screenControllerFN(void* param);
 
+std::atomic_int Lift::restingPos = 0;
+std::atomic_int Lift::lowTowerPos = 1500;
+std::atomic_int Lift::midTowerPos = 2000;
+
 std::atomic_int Angler::restingPos = 100;
-std::atomic_int Angler::pidThreshold = 1750;
-std::atomic_int Angler::verticalPos = 4660;
+std::atomic_int Angler::readyLiftPos = 1400;
+std::atomic_int Angler::pidThreshold = 2500;
+std::atomic_int Angler::verticalPos = 4550;
 
 
 void initialize() {
@@ -35,9 +40,11 @@ void initialize() {
 
   robot::angler = std::make_shared<Angler>(
     std::make_shared<okapi::Motor>(-10),
-    okapi::IterativePosPIDController::Gains({0.00065, 0, 0.00005, 0}));
+    okapi::IterativePosPIDController::Gains({0.00036, 0, 0.00006, 0}));
   
-  robot::lift = std::make_shared<okapi::Motor>(20);
+  robot::lift = std::make_shared<Lift>(
+    std::make_shared<okapi::Motor>(20),
+    okapi::IterativePosPIDController::Gains({0.001, 0, 0, 0}));
 
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-17, 18}));
   robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  4, -5}));
@@ -45,7 +52,7 @@ void initialize() {
 
   robot::chassis = okapi::ChassisControllerBuilder()
                       .withMotors(robot::lDrive, robot::rDrive)
-                      .withDimensions(okapi::ChassisScales({{4.125_in, 10_in}, okapi::imev5GreenTPR}))
+                      .withDimensions(okapi::ChassisScales({{3.25_in, 10_in}, okapi::imev5GreenTPR}))
                       .build();
 
   robot::chassisProfiler = okapi::AsyncMotionProfileControllerBuilder()
@@ -57,10 +64,10 @@ void initialize() {
   robot::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 
   robot::angler->getMotor()->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
-  robot::lift->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
-  robot::lift->setGearing(okapi::AbstractMotor::gearset::red);
+  robot::lift->getMotor()->setGearing(okapi::AbstractMotor::gearset::red);
 
   robot::angler->startThread();
+  robot::lift->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
-  robot::screen::notification = "You wouldn't get it";
+  robot::screen::notification = "Get Your Stickers!";
 }

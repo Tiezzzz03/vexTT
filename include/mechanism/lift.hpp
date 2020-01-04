@@ -1,22 +1,20 @@
 #pragma once
 #include "main.h"
-#include <atomic>
 
-class Angler {
+class Lift {
 public:
-  Angler(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter = std::make_unique<okapi::PassthroughFilter>());
+  Lift(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter = std::make_unique<okapi::PassthroughFilter>());
 
-  ~Angler();
+  ~Lift();
 
   static std::atomic_int restingPos;
-  static std::atomic_int readyLiftPos;
-  static std::atomic_int pidThreshold;
-  static std::atomic_int verticalPos;
+  static std::atomic_int lowTowerPos;
+  static std::atomic_int midTowerPos;
   
 
-  void stack();
+  void moveLowTower();
 
-  void readyLift();
+  void moveMidTower();
 
   void reset();
 
@@ -38,8 +36,6 @@ public:
 
 private:
   void loop();
-
-  std::atomic_int target;
 
   pros::Task *thread{nullptr};
   std::unique_ptr<okapi::IterativePosPIDController> controller{nullptr};

@@ -42,8 +42,13 @@ void opcontrol() {
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);
 
   // in order to read rising/falling cases, button objects are needed
+  okapi::ControllerButton buttonL1 = robot::controller[okapi::ControllerDigital::L1];
+  okapi::ControllerButton buttonL2 = robot::controller[okapi::ControllerDigital::L2];
+  okapi::ControllerButton buttonL3 = robot::controller[okapi::ControllerDigital::right];
   okapi::ControllerButton buttonDown = robot::controller[okapi::ControllerDigital::down];
 
+  //
+  bool trayDown = true;
 
   while(true){
 
@@ -65,7 +70,7 @@ void opcontrol() {
       robot::intake->moveVoltage(12000);
 
     }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
-      robot::intake->moveVoltage(6000);
+      robot::intake->moveVoltage(4000);
 
     }else if(robot::controller.getDigital(okapi::ControllerDigital::Y)){
       robot::intake->moveVoltage(-6000);
@@ -74,27 +79,49 @@ void opcontrol() {
       robot::intake->moveVoltage(0);
     }
 
-    /*
-     * Angler/Tray control (async)
-     * L2 -> reset/down tray position
-     * L3/right -> stack/up tray position
-     * down -> while held, stop task and retract, when released return to normal operation
-    **/ 
-    if(robot::controller.getDigital(okapi::ControllerDigital::right)){
-      robot::angler->stack();
-
-    }else if(robot::controller.getDigital(okapi::ControllerDigital::L2)){
-      robot::angler->reset();
-
-    }else if(buttonDown.changed()){
-      if(buttonDown.isPressed()){
-        robot::angler->getTask()->suspend();
-        robot::angler->getMotor()->moveVoltage(-6000);
-
+    if(buttonL1.changed()){
+      if(buttonL1.isPressed()){
+        robot::lift->moveMidTower();
+        robot::angler->readyLift();
       }else{
-        robot::angler->getTask()->resume();
-        robot::angler->tare();
+        robot::lift->reset();
         robot::angler->reset();
+        trayDown = true;
+      }
+    }
+
+    if(buttonL2.changed()){
+      if(buttonL2.isPressed()){
+        robot::lift->moveLowTower();
+        robot::angler->readyLift();
+      }else{
+        robot::lift->reset();
+        robot::angler->reset();
+        trayDown = true;
+      }
+    }
+
+    if(!buttonL1.isPressed() && !buttonL2.isPressed()){
+
+      if(buttonL3.changedToPressed()){
+      
+        trayDown = !trayDown;
+        if(trayDown){
+          robot::angler->reset();
+        }else{
+          robot::angler->stack();
+        }
+
+      }else if(buttonDown.changed()){
+        if(buttonDown.isPressed()){
+          robot::angler->getTask()->suspend();
+          robot::angler->getMotor()->moveVoltage(-6000);
+
+        }else{
+          robot::angler->getTask()->resume();
+          robot::angler->tare();
+          robot::angler->reset();
+        }
       }
     }
 

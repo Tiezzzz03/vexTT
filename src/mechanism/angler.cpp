@@ -18,6 +18,11 @@ void Angler::stack(){
   controller->setTarget(target);
 }
 
+void Angler::readyLift(){
+  target.store(readyLiftPos);
+  controller->setTarget(target);
+}
+
 void Angler::reset(){
   target.store(restingPos);
   controller->setTarget(target);
