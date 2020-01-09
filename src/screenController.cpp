@@ -51,7 +51,57 @@ void screenControllerFN(void* param){
   lv_obj_t *panel[numberOfPanels];
   for(uint i = 0; i < numberOfPanels; i++){
     panel[i] = lv_cont_create(scr, NULL);
+    lv_obj_set_size(panel[i], 480, 240);
   }
 
+
+  // Disabled init
+  lv_obj_set_style(panel[0], &lv_style_plain);
+
+
+  // Notification init
+  lv_obj_set_style(panel[1], &lv_style_plain);
+  lv_cont_set_layout(panel[1], LV_LAYOUT_CENTER);
+  lv_obj_set_pos(panel[1], 480, 0);
+
+  lv_obj_t *notificationLabel = lv_label_create(panel[1], NULL);
+  lv_label_set_align(notificationLabel, LV_LABEL_ALIGN_CENTER);
+  lv_obj_set_style(notificationLabel, &screen::resources::redText);
+
+
+  // Selection init
+  lv_obj_set_style(panel[2], &lv_style_plain);
+  lv_obj_set_pos(panel[2], 480, 0);
+
+  lv_obj_t *mainList = lv_btnm_create(panel[2], NULL);
+  const char *buttonMap[numberOfRoutines * 2];
+  for(uint i = 0; i < numberOfRoutines; i++){
+    buttonMap[2*i] = routines[i].title;
+    buttonMap[2*i+1] = (i + 1 < numberOfRoutines) ? "\n" : "";
+  }
+  lv_btnm_set_map(mainList, buttonMap);
+  lv_obj_set_size(mainList, 240, 240);
+  screen::ttField field(panel[2]);
+  field.setPos(240, 0);
+
+
+  // EZ Screen init
+  static lv_style_t rainbowStyle;
+  lv_style_copy(&rainbowStyle, &lv_style_plain);
+  lv_obj_set_style(panel[3], &rainbowStyle);
+  lv_obj_set_pos(panel[3], 480, 0);
+
+  lv_obj_t *gifContainer = lv_cont_create(panel[3], NULL);
+  lv_obj_set_size(gifContainer, 240, 240);
+  lv_obj_set_pos(gifContainer, 120, 0);
+  Gif ezgif("/usd/EZ/EZlogo.gif", gifContainer);
+  uint16_t colorSeed = 0;
   
+
+  pros::delay(500);
+  LOG_INFO(std::string("ScreenController: Initialized"));
+
+  while(true){
+    pros::delay(50);
+  }
 }
