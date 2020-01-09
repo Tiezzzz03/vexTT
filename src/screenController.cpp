@@ -74,7 +74,7 @@ void screenControllerFN(void* param){
   lv_obj_set_pos(panel[2], 480, 0);
 
   lv_obj_t *mainList = lv_btnm_create(panel[2], NULL);
-  const char *buttonMap[numberOfRoutines * 2];
+  const char *buttonMap[2 * numberOfRoutines];
   for(uint i = 0; i < numberOfRoutines; i++){
     buttonMap[2*i] = routines[i].title;
     buttonMap[2*i+1] = (i + 1 < numberOfRoutines) ? "\n" : "";
@@ -102,6 +102,19 @@ void screenControllerFN(void* param){
   LOG_INFO(std::string("ScreenController: Initialized"));
 
   while(true){
+    switch(robot::screen::state){
+      case screenMode::disabled:
+        break;
+      case screenMode::notification:
+        break;
+      case screenMode::selection:
+        break;
+      case screenMode::ez:
+        break;
+      default:
+        throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+    }
+
     pros::delay(50);
   }
 }
