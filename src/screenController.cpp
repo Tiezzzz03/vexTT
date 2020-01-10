@@ -104,12 +104,20 @@ void screenControllerFN(void* param){
   while(true){
     switch(robot::screen::state){
       case screenMode::disabled:
+        LOG_INFO(std::string("ScreenController: Entering mode disabled"));
+
         break;
       case screenMode::notification:
+        LOG_INFO(std::string("ScreenController: Entering mode notification"));
+
         break;
       case screenMode::selection:
+        LOG_INFO(std::string("ScreenController: Entering mode selection"));
+
         break;
       case screenMode::ez:
+        LOG_INFO(std::string("ScreenController: Entering mode ez"));
+
         break;
       default:
         throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
