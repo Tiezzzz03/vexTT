@@ -32,7 +32,7 @@ std::atomic_int Lift::midTowerPos = 2000;
 std::atomic_int Angler::restingPos = 100;
 std::atomic_int Angler::readyLiftPos = 1400;
 std::atomic_int Angler::pidThreshold = 2500;
-std::atomic_int Angler::verticalPos = 4550;
+std::atomic_int Angler::verticalPos = 4500;
 
 
 void initialize() {
