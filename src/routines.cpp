@@ -3,7 +3,7 @@
 
 using namespace okapi::literals;
 
-int selection = 3;
+int selection = 0;
 
 std::vector<AutonomousRoutine> routines = {
 

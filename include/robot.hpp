@@ -1,6 +1,6 @@
 #pragma once
 #include "main.h"
-#include "mechanism/angler.hpp"
+#include "mechanism/tilter.hpp"
 #include "mechanism/lift.hpp"
 
 enum class screenMode{
@@ -12,7 +12,7 @@ namespace robot {
 extern okapi::Controller controller;
 
 extern std::shared_ptr<Lift> lift;
-extern std::shared_ptr<Angler> angler;
+extern std::shared_ptr<Tilter> tilter;
 extern std::shared_ptr<okapi::MotorGroup> intake;
 extern std::shared_ptr<okapi::MotorGroup> lDrive;
 extern std::shared_ptr<okapi::MotorGroup> rDrive;

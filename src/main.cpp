@@ -82,10 +82,10 @@ void opcontrol() {
     if(buttonL1.changed()){
       if(buttonL1.isPressed()){
         robot::lift->moveMidTower();
-        robot::angler->readyLift();
+        robot::tilter->readyLift();
       }else{
         robot::lift->reset();
-        robot::angler->reset();
+        robot::tilter->reset();
         trayDown = true;
       }
     }
@@ -93,10 +93,10 @@ void opcontrol() {
     if(buttonL2.changed()){
       if(buttonL2.isPressed()){
         robot::lift->moveLowTower();
-        robot::angler->readyLift();
+        robot::tilter->readyLift();
       }else{
         robot::lift->reset();
-        robot::angler->reset();
+        robot::tilter->reset();
         trayDown = true;
       }
     }
@@ -107,20 +107,20 @@ void opcontrol() {
       
         trayDown = !trayDown;
         if(trayDown){
-          robot::angler->reset();
+          robot::tilter->reset();
         }else{
-          robot::angler->stack();
+          robot::tilter->stack();
         }
 
       }else if(buttonDown.changed()){
         if(buttonDown.isPressed()){
-          robot::angler->getTask()->suspend();
-          robot::angler->getMotor()->moveVoltage(-6000);
+          robot::tilter->getTask()->suspend();
+          robot::tilter->getMotor()->moveVoltage(-6000);
 
         }else{
-          robot::angler->getTask()->resume();
-          robot::angler->tare();
-          robot::angler->reset();
+          robot::tilter->getTask()->resume();
+          robot::tilter->tare();
+          robot::tilter->reset();
         }
       }
     }

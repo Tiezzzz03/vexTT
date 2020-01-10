@@ -2,11 +2,11 @@
 #include "main.h"
 #include <atomic>
 
-class Angler {
+class Tilter {
 public:
-  Angler(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter = std::make_unique<okapi::PassthroughFilter>());
+  Tilter(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter = std::make_unique<okapi::PassthroughFilter>());
 
-  ~Angler();
+  ~Tilter();
 
   static std::atomic_int restingPos;
   static std::atomic_int readyLiftPos;
@@ -34,7 +34,7 @@ public:
 
   pros::Task *getTask();
 
-  static void trampoline(void *angler);
+  static void trampoline(void *tilter);
 
 private:
   void loop();

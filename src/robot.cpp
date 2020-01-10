@@ -7,7 +7,7 @@ namespace robot {
 okapi::Controller controller;
 
 std::shared_ptr<Lift> lift;
-std::shared_ptr<Angler> angler;
+std::shared_ptr<Tilter> tilter;
 std::shared_ptr<okapi::MotorGroup> intake;
 std::shared_ptr<okapi::MotorGroup> lDrive;
 std::shared_ptr<okapi::MotorGroup> rDrive;
@@ -29,16 +29,16 @@ std::atomic_int Lift::restingPos = 0;
 std::atomic_int Lift::lowTowerPos = 1500;
 std::atomic_int Lift::midTowerPos = 2000;
 
-std::atomic_int Angler::restingPos = 100;
-std::atomic_int Angler::readyLiftPos = 1400;
-std::atomic_int Angler::pidThreshold = 2500;
-std::atomic_int Angler::verticalPos = 4500;
+std::atomic_int Tilter::restingPos = 100;
+std::atomic_int Tilter::readyLiftPos = 1400;
+std::atomic_int Tilter::pidThreshold = 2500;
+std::atomic_int Tilter::verticalPos = 4500;
 
 
 void initialize() {
   okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
 
-  robot::angler = std::make_shared<Angler>(
+  robot::tilter = std::make_shared<Tilter>(
     std::make_shared<okapi::Motor>(-10),
     okapi::IterativePosPIDController::Gains({0.00036, 0, 0.00006, 0}));
   
@@ -63,10 +63,10 @@ void initialize() {
 
   robot::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 
-  robot::angler->getMotor()->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+  robot::tilter->getMotor()->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
   robot::lift->getMotor()->setGearing(okapi::AbstractMotor::gearset::red);
 
-  robot::angler->startThread();
+  robot::tilter->startThread();
   robot::lift->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
   robot::screen::notification = "Get Your Stickers!";
