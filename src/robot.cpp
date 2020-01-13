@@ -17,7 +17,7 @@ std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
 
 namespace screen {
   pros::Task *controller;
-  volatile screenMode state;
+  volatile std::atomic<screenMode> state;
   std::string notification;
 }
 
