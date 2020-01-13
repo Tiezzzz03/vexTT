@@ -102,25 +102,66 @@ void screenControllerFN(void* param){
   LOG_INFO(std::string("ScreenController: Initialized"));
 
   while(true){
-    switch(robot::screen::state){
-      case screenMode::disabled:
-        LOG_INFO(std::string("ScreenController: Entering mode disabled"));
+    if(robot::screen::state == lastScreenState){
+      switch(robot::screen::state){
+        case screenMode::disabled:
 
-        break;
-      case screenMode::notification:
-        LOG_INFO(std::string("ScreenController: Entering mode notification"));
+          break;
+        case screenMode::notification:
 
-        break;
-      case screenMode::selection:
-        LOG_INFO(std::string("ScreenController: Entering mode selection"));
+          break;
+        case screenMode::selection:
 
-        break;
-      case screenMode::ez:
-        LOG_INFO(std::string("ScreenController: Entering mode ez"));
+          break;
+        case screenMode::ez:
 
-        break;
-      default:
-        throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+          break;
+        default:
+          throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+      }
+    }else{
+      switch(lastScreenState){
+        case screenMode::disabled:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode disabled"));
+
+          break;
+        case screenMode::notification:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode notification"));
+
+          break;
+        case screenMode::selection:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode selection"));
+
+          break;
+        case screenMode::ez:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode ez"));
+
+          break;
+        default:
+          throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+      }
+
+      switch(robot::screen::state){
+        case screenMode::disabled:
+          LOG_INFO(std::string("ScreenController: Entering mode disabled"));
+
+          break;
+        case screenMode::notification:
+          LOG_INFO(std::string("ScreenController: Entering mode notification"));
+
+          break;
+        case screenMode::selection:
+          LOG_INFO(std::string("ScreenController: Entering mode selection"));
+
+          break;
+        case screenMode::ez:
+          LOG_INFO(std::string("ScreenController: Entering mode ez"));
+
+          break;
+        default:
+          throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+      }
+      lastScreenState = robot::screen::state;
     }
 
     pros::delay(50);
