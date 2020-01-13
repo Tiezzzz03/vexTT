@@ -2,6 +2,7 @@
 #include "main.h"
 #include "mechanism/tilter.hpp"
 #include "mechanism/lift.hpp"
+#include <atomic>
 
 enum class screenMode{
   disabled, notification, selection, ez, NUMPANELS
@@ -21,7 +22,7 @@ extern std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
 
 namespace screen {
   extern pros::Task *controller;
-  extern volatile screenMode state;
+  extern volatile std::atomic<screenMode> state;
   extern std::string notification;
 }
 }
