@@ -105,17 +105,48 @@ void screenControllerFN(void* param){
     if(robot::screen::state == lastScreenState){
       switch(robot::screen::state){
         case screenMode::disabled:
-
           break;
+
         case screenMode::notification:
-
+          lv_label_set_text(notificationLabel, robot::screen::notification.c_str());
           break;
+
         case screenMode::selection:
+          /*selected = selected || lv_btn_get_state(confirmButton) == LV_BTN_STATE_PR;
+
+          if(!selected){
+            for(int i = 0; i < number_of_routines; i++){
+              if(lv_btn_get_state(routine_buttons[i]) == LV_BTN_STATE_PR){
+                selection = i;
+                lv_obj_set_y(confirm_button, 40 * selection);
+
+                field->clean();
+                routines[selection].print(field);
+              }
+            }
+
+            lv_obj_set_x(main_list, 0);
+          }else{
+            lv_obj_set_hidden(main_list, true);
+            field->setX(120);
+          }*/
 
           break;
+
         case screenMode::ez:
+          rainbowStyle.body.main_color = getRainbowColorFromSeed(colorSeed);
+          rainbowStyle.body.grad_color = getRainbowColorFromSeed(colorSeed - 0xFF);
+
+          if(colorSeed < 0x5F8){
+            colorSeed += 8;
+          }else{
+            colorSeed = 0;
+          }
+
+          lv_obj_refresh_style(panel[3]);
 
           break;
+
         default:
           throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
       }
@@ -123,18 +154,23 @@ void screenControllerFN(void* param){
       switch(lastScreenState){
         case screenMode::disabled:
           LOG_INFO(std::string("ScreenController: Cleaning up mode disabled"));
-
+          lv_obj_set_pos(panel[0], 480, 0);
           break;
+
         case screenMode::notification:
           LOG_INFO(std::string("ScreenController: Cleaning up mode notification"));
-
+          lv_obj_set_pos(panel[1], 480, 0);
           break;
+
         case screenMode::selection:
           LOG_INFO(std::string("ScreenController: Cleaning up mode selection"));
+          lv_obj_set_pos(panel[2], 480, 0);
 
           break;
         case screenMode::ez:
           LOG_INFO(std::string("ScreenController: Cleaning up mode ez"));
+          lv_obj_set_pos(panel[3], 480, 0);
+          ezgif.pause();
 
           break;
         default:
@@ -144,20 +180,25 @@ void screenControllerFN(void* param){
       switch(robot::screen::state){
         case screenMode::disabled:
           LOG_INFO(std::string("ScreenController: Entering mode disabled"));
-
+          lv_obj_set_pos(panel[0], 0, 0);
           break;
+
         case screenMode::notification:
           LOG_INFO(std::string("ScreenController: Entering mode notification"));
-
+          lv_obj_set_pos(panel[1], 0, 0);
           break;
+
         case screenMode::selection:
           LOG_INFO(std::string("ScreenController: Entering mode selection"));
-
+          lv_obj_set_pos(panel[2], 0, 0);
           break;
+
         case screenMode::ez:
           LOG_INFO(std::string("ScreenController: Entering mode ez"));
-
+          lv_obj_set_pos(panel[3], 0, 0);
+          ezgif.resume();
           break;
+
         default:
           throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
       }
