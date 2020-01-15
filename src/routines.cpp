@@ -8,8 +8,7 @@ uint16_t selection = 0;
 std::vector<AutonomousRoutine> routines = {
 
 AutonomousRoutine(
-  "Disable",
-  &lv_style_plain,
+  "#000000 Disable#",
   [](screen::ttField *field) {
     field->finishDrawing(); 
   },
@@ -19,9 +18,9 @@ AutonomousRoutine(
 ),
 
 AutonomousRoutine(
-  "Cube Push",
-  &lv_style_plain,
+  "#ff00ff Cube Push#",
   [](screen::ttField *field){
+    field->draw(screen::scoringZone::farRed, screen::color::orange, 1);
     field->finishDrawing();
   },
   [](){
@@ -31,6 +30,26 @@ AutonomousRoutine(
     robot::chassis->moveDistance(-12_in);
     
     robot::chassis->getModel()->setMaxVelocity(200);
+  }
+),
+
+AutonomousRoutine(
+  "#ff0000 Red Small Zone 5",
+  [](screen::ttField *field){
+    field->finishDrawing();
+  },
+  [](){
+
+  }
+),
+
+AutonomousRoutine(
+  "#0000ff Blue Small Zone 5",
+  [](screen::ttField *field){
+    field->finishDrawing();
+  },
+  [](){
+
   }
 )
 

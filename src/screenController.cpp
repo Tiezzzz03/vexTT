@@ -80,10 +80,16 @@ void screenControllerFN(void* param){
     buttonMap[2*i+1] = (i + 1 < numberOfRoutines) ? "\n" : "";
   }
   lv_btnm_set_map(selectionList, buttonMap);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BG, &screen::resources::listStyle);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_REL, &screen::resources::listStyle);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_PR, &screen::resources::pressedButton);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_TGL_REL, &screen::resources::pressedButton);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_TGL_PR, &screen::resources::pressedButton);
   lv_btnm_set_toggle(selectionList, true, selection);
   lv_btnm_set_recolor(selectionList, true);
   lv_obj_set_size(selectionList, 240, 240);
   screen::ttField field(panel[2]);
+  field.finishDrawing();
   field.setPos(240, 0);
   uint16_t toggledBtn;
 
