@@ -66,7 +66,7 @@ void screenControllerFN(void* param){
 
   lv_obj_t *notificationLabel = lv_label_create(panel[1], NULL);
   lv_label_set_align(notificationLabel, LV_LABEL_ALIGN_CENTER);
-  lv_obj_set_style(notificationLabel, &screen::resources::redText);
+  lv_obj_set_style(panel[1], &screen::resources::redText);
 
 
   // Selection init
@@ -101,6 +101,7 @@ void screenControllerFN(void* param){
   lv_obj_set_pos(panel[3], 480, 0);
 
   lv_obj_t *gifContainer = lv_cont_create(panel[3], NULL);
+  lv_obj_set_style(gifContainer, &lv_style_transp);
   lv_obj_set_size(gifContainer, 240, 240);
   lv_obj_set_pos(gifContainer, 120, 0);
   Gif ezgif("/usd/EZ/EZlogo.gif", gifContainer);
