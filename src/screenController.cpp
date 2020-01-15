@@ -73,16 +73,19 @@ void screenControllerFN(void* param){
   lv_obj_set_style(panel[2], &lv_style_plain);
   lv_obj_set_pos(panel[2], 480, 0);
 
-  lv_obj_t *mainList = lv_btnm_create(panel[2], NULL);
+  lv_obj_t *selectionList = lv_btnm_create(panel[2], NULL);
   const char *buttonMap[2 * numberOfRoutines];
   for(uint i = 0; i < numberOfRoutines; i++){
     buttonMap[2*i] = routines[i].title;
     buttonMap[2*i+1] = (i + 1 < numberOfRoutines) ? "\n" : "";
   }
-  lv_btnm_set_map(mainList, buttonMap);
-  lv_obj_set_size(mainList, 240, 240);
+  lv_btnm_set_map(selectionList, buttonMap);
+  lv_btnm_set_toggle(selectionList, true, selection);
+  lv_btnm_set_recolor(selectionList, true);
+  lv_obj_set_size(selectionList, 240, 240);
   screen::ttField field(panel[2]);
   field.setPos(240, 0);
+  uint16_t toggledBtn;
 
 
   // EZ Screen init
@@ -112,24 +115,13 @@ void screenControllerFN(void* param){
           break;
 
         case screenMode::selection:
-          /*selected = selected || lv_btn_get_state(confirmButton) == LV_BTN_STATE_PR;
+          toggledBtn = lv_btnm_get_toggled(selectionList);
 
-          if(!selected){
-            for(int i = 0; i < number_of_routines; i++){
-              if(lv_btn_get_state(routine_buttons[i]) == LV_BTN_STATE_PR){
-                selection = i;
-                lv_obj_set_y(confirm_button, 40 * selection);
-
-                field->clean();
-                routines[selection].print(field);
-              }
-            }
-
-            lv_obj_set_x(main_list, 0);
-          }else{
-            lv_obj_set_hidden(main_list, true);
-            field->setX(120);
-          }*/
+          if(selection != toggledBtn){
+            field.clean();
+            routines[toggledBtn].print(&field);
+            selection = toggledBtn;
+          }
 
           break;
 

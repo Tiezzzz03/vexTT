@@ -22,4 +22,4 @@ public:
 };
 
 extern std::vector<AutonomousRoutine> routines;
-extern int selection;
+extern uint16_t selection;
