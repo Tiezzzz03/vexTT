@@ -1,6 +1,6 @@
-#include "angler.hpp"
+#include "tilter.hpp"
 
-Angler::Angler(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
+Tilter::Tilter(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
   motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
 
   target.store(0);
@@ -8,27 +8,27 @@ Angler::Angler(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePos
   controller->setOutputLimits(0.33, -0.6);
 }
 
-Angler::~Angler(){
+Tilter::~Tilter(){
   thread->remove();
   delete thread;
 }
 
-void Angler::stack(){
+void Tilter::stack(){
   target.store(verticalPos);
   controller->setTarget(target);
 }
 
-void Angler::readyLift(){
+void Tilter::readyLift(){
   target.store(readyLiftPos);
   controller->setTarget(target);
 }
 
-void Angler::reset(){
+void Tilter::reset(){
   target.store(restingPos);
   controller->setTarget(target);
 }
 
-bool Angler::isSettled(){
+bool Tilter::isSettled(){
   auto currentPos = motor->getPosition();
 
   if(target <= restingPos){
@@ -39,39 +39,39 @@ bool Angler::isSettled(){
   }
 }
 
-void Angler::waitUntilSettled(){
+void Tilter::waitUntilSettled(){
   while(!isSettled()){
     pros::delay(50);
   }
 }
 
-void Angler::trim(int trimDistance){
+void Tilter::trim(int trimDistance){
   restingPos   += trimDistance;
   pidThreshold += trimDistance;
   verticalPos  += trimDistance;
 }
 
-void Angler::tare(){
+void Tilter::tare(){
   motor->tarePosition();
 }
 
-std::shared_ptr<okapi::AbstractMotor> Angler::getMotor(){
+std::shared_ptr<okapi::AbstractMotor> Tilter::getMotor(){
   return motor;
 }
 
-void Angler::startThread(){
-  thread = new pros::Task(Angler::trampoline, this, "Angler");
+void Tilter::startThread(){
+  thread = new pros::Task(Tilter::trampoline, this, "Tilter");
 }
 
-pros::Task *Angler::getTask(){
+pros::Task *Tilter::getTask(){
   return thread;
 }
 
-void Angler::trampoline(void *angler){
-  static_cast<Angler*>(angler)->loop();
+void Tilter::trampoline(void *tilter){
+  static_cast<Tilter*>(tilter)->loop();
 }
 
-void Angler::loop(){
+void Tilter::loop(){
   int currentPos = 0;
   double power = 0;
 
