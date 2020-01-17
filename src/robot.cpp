@@ -26,13 +26,13 @@ namespace screen {
 extern void screenControllerFN(void* param);
 
 std::atomic_int Lift::restingPos = 0;
-std::atomic_int Lift::lowTowerPos = 1500;
+std::atomic_int Lift::lowTowerPos = 1550;
 std::atomic_int Lift::midTowerPos = 2000;
 
 std::atomic_int Tilter::restingPos = 100;
-std::atomic_int Tilter::readyLiftPos = 1400;
-std::atomic_int Tilter::pidThreshold = 2500;
-std::atomic_int Tilter::verticalPos = 4500;
+std::atomic_int Tilter::readyLiftPos = 100;
+std::atomic_int Tilter::pidThreshold = 3000;
+std::atomic_int Tilter::verticalPos = 5000;
 
 
 void initialize() {
