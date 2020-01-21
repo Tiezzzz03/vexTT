@@ -62,7 +62,7 @@ void screenControllerFN(void* param){
   // Notification init
   lv_obj_set_style(panel[1], &lv_style_plain);
   lv_cont_set_layout(panel[1], LV_LAYOUT_CENTER);
-  lv_obj_set_pos(panel[1], 480, 0);
+  lv_obj_set_hidden(panel[1], true);
 
   lv_obj_t *notificationLabel = lv_label_create(panel[1], NULL);
   lv_label_set_align(notificationLabel, LV_LABEL_ALIGN_CENTER);
@@ -71,7 +71,7 @@ void screenControllerFN(void* param){
 
   // Selection init
   lv_obj_set_style(panel[2], &lv_style_plain);
-  lv_obj_set_pos(panel[2], 480, 0);
+  lv_obj_set_hidden(panel[2], true);
 
   lv_obj_t *selectionList = lv_btnm_create(panel[2], NULL);
   const char *buttonMap[2 * numberOfRoutines];
@@ -98,7 +98,7 @@ void screenControllerFN(void* param){
   static lv_style_t rainbowStyle;
   lv_style_copy(&rainbowStyle, &lv_style_plain);
   lv_obj_set_style(panel[3], &rainbowStyle);
-  lv_obj_set_pos(panel[3], 480, 0);
+  lv_obj_set_hidden(panel[3], true);  
 
   lv_obj_t *gifContainer = lv_cont_create(panel[3], NULL);
   lv_obj_set_style(gifContainer, &lv_style_transp);
@@ -153,22 +153,22 @@ void screenControllerFN(void* param){
       switch(lastScreenState){
         case screenMode::disabled:
           LOG_INFO(std::string("ScreenController: Cleaning up mode disabled"));
-          lv_obj_set_pos(panel[0], 480, 0);
+          lv_obj_set_hidden(panel[0], true);
           break;
 
         case screenMode::notification:
           LOG_INFO(std::string("ScreenController: Cleaning up mode notification"));
-          lv_obj_set_pos(panel[1], 480, 0);
+          lv_obj_set_hidden(panel[1], true);
           break;
 
         case screenMode::selection:
           LOG_INFO(std::string("ScreenController: Cleaning up mode selection"));
-          lv_obj_set_pos(panel[2], 480, 0);
+          lv_obj_set_hidden(panel[2], true);
 
           break;
         case screenMode::ez:
           LOG_INFO(std::string("ScreenController: Cleaning up mode ez"));
-          lv_obj_set_pos(panel[3], 480, 0);
+          lv_obj_set_hidden(panel[3], true);
           ezgif.pause();
 
           break;
@@ -179,22 +179,22 @@ void screenControllerFN(void* param){
       switch(robot::screen::state){
         case screenMode::disabled:
           LOG_INFO(std::string("ScreenController: Entering mode disabled"));
-          lv_obj_set_pos(panel[0], 0, 0);
+          lv_obj_set_hidden(panel[0], false);          
           break;
 
         case screenMode::notification:
           LOG_INFO(std::string("ScreenController: Entering mode notification"));
-          lv_obj_set_pos(panel[1], 0, 0);
+          lv_obj_set_hidden(panel[1], false);          
           break;
 
         case screenMode::selection:
           LOG_INFO(std::string("ScreenController: Entering mode selection"));
-          lv_obj_set_pos(panel[2], 0, 0);
+          lv_obj_set_hidden(panel[2], false);          
           break;
 
         case screenMode::ez:
           LOG_INFO(std::string("ScreenController: Entering mode ez"));
-          lv_obj_set_pos(panel[3], 0, 0);
+          lv_obj_set_hidden(panel[3], false);          
           ezgif.resume();
           break;
 
