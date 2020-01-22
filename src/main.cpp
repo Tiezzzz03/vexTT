@@ -38,7 +38,7 @@ void opcontrol() {
   // set the screen to display ez logo gif
   robot::screen::state = screenMode::ez;
 
-  // disable the profile controller, as the driver will control it manually
+  // disable the profile controller, as the operator will control it manually
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);
 
   // in order to read rising/falling cases, button objects are needed
@@ -47,7 +47,7 @@ void opcontrol() {
   okapi::ControllerButton buttonL3 = robot::controller[okapi::ControllerDigital::right];
   okapi::ControllerButton buttonDown = robot::controller[okapi::ControllerDigital::down];
 
-  //
+  // in order to control tray with a toggle, its state is stored here
   bool trayDown = true;
 
   while(true){
@@ -79,6 +79,13 @@ void opcontrol() {
       robot::intake->moveVoltage(0);
     }
 
+    /*
+     * Lift control
+     * The lift will go up while the respective button is pressed and held
+     * 
+     * L1 -> middle height tower
+     * L2 -> low/alliance height tower
+    **/
     if(buttonL1.changed()){
       if(buttonL1.isPressed()){
         robot::lift->moveMidTower();
@@ -101,6 +108,12 @@ void opcontrol() {
       }
     }
 
+    /*
+     * Tilter control
+     * While the lift is up, control is disabled
+     * 
+     * L3/right -> toggle tray position
+    **/
     if(!buttonL1.isPressed() && !buttonL2.isPressed()){
 
       if(buttonL3.changedToPressed()){
@@ -125,10 +138,12 @@ void opcontrol() {
       }
     }
 
+    // generate paths and save to SD card
     if(robot::controller.getDigital(okapi::ControllerDigital::X) && robot::controller.getDigital(okapi::ControllerDigital::B)){
       generatePaths();
     }
 
+    // 100 Hz
     pros::delay(10);
   }
 }
