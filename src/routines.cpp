@@ -45,12 +45,17 @@ AutonomousRoutine(
   },
   [](){
     robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {4_ft, 0_ft, 0_deg}}, "CubeApproach", {0.8,1,10});
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {4_ft, 0_ft, 0_deg}}, "ZoneApproach", {0.8,1,10});
+    okapi::IterativePosPIDController turningController({.01, .0001, 0, 0}, okapi::TimeUtilFactory::createDefault());
 
     robot::intake->moveVoltage(-12000);
     pros::delay(250);
 
     robot::lift->moveMidTower();
-    robot::chassis->moveDistanceAsync(-2_in);
+    robot::chassis->getModel()->driveVectorVoltage(-0.3, 0);
+    pros::delay(500);
+
+    robot::chassis->getModel()->stop();
     robot::lift->waitUntilSettled();
 
     robot::lift->reset();
@@ -62,7 +67,22 @@ AutonomousRoutine(
     robot::chassisProfiler->setTarget("CubeApproach");
     robot::chassisProfiler->waitUntilSettled();
 
-    
+    turningController.setTarget(135);
+    while(!turningController.isSettled()){
+      robot::chassis->getModel()->rotate(turningController.step(robot::gyro.get_heading()));
+      pros::delay(10);
+    }
+
+    robot::chassisProfiler->setTarget("ZoneApproach");
+    robot::chassisProfiler->waitUntilSettled();
+
+    robot::tilter->stack();
+    robot::tilter->waitUntilSettled();
+
+    robot::chassis->getModel()->forward(-0.4);
+    pros::delay(1000);
+
+    robot::chassis->getModel()->stop();
   }
 ),
 
@@ -74,7 +94,45 @@ AutonomousRoutine(
     field->finishDrawing();
   },
   [](){
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {4_ft, 0_ft, 0_deg}}, "CubeApproach", {0.8,1,10});
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {4_ft, 0_ft, 0_deg}}, "ZoneApproach", {0.8,1,10});
+    okapi::IterativePosPIDController turningController({.01, .0001, 0, 0}, okapi::TimeUtilFactory::createDefault());
 
+    robot::intake->moveVoltage(-12000);
+    pros::delay(250);
+
+    robot::lift->moveMidTower();
+    robot::chassis->getModel()->driveVectorVoltage(-0.3, 0);
+    pros::delay(500);
+
+    robot::chassis->getModel()->stop();
+    robot::lift->waitUntilSettled();
+
+    robot::lift->reset();
+    pros::delay(250);
+
+    robot::intake->moveVoltage(12000);
+    pros::delay(250);
+
+    robot::chassisProfiler->setTarget("CubeApproach");
+    robot::chassisProfiler->waitUntilSettled();
+
+    turningController.setTarget(-135);
+    while(!turningController.isSettled()){
+      robot::chassis->getModel()->rotate(turningController.step(robot::gyro.get_heading()));
+      pros::delay(10);
+    }
+
+    robot::chassisProfiler->setTarget("ZoneApproach");
+    robot::chassisProfiler->waitUntilSettled();
+
+    robot::tilter->stack();
+    robot::tilter->waitUntilSettled();
+
+    robot::chassis->getModel()->forward(-0.4);
+    pros::delay(1000);
+
+    robot::chassis->getModel()->stop();
   }
 )
 

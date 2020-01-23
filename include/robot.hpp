@@ -11,6 +11,8 @@ enum class screenMode{
 namespace robot {
 extern okapi::Controller controller;
 
+extern pros::Imu gyro;
+
 extern std::shared_ptr<Lift> lift;
 extern std::shared_ptr<Tilter> tilter;
 extern std::shared_ptr<okapi::MotorGroup> intake;

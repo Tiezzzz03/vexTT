@@ -2,9 +2,13 @@
 
 using namespace okapi::literals;
 
+extern void screenControllerFN(void* param);
+
 namespace robot {
 
 okapi::Controller controller;
+
+pros::Imu gyro(9);
 
 std::shared_ptr<Lift> lift;
 std::shared_ptr<Tilter> tilter;
@@ -23,8 +27,6 @@ namespace screen {
 
 }
 
-extern void screenControllerFN(void* param);
-
 std::atomic_int Lift::restingPos = 0;
 std::atomic_int Lift::lowTowerPos = 1550;
 std::atomic_int Lift::midTowerPos = 2000;
@@ -37,6 +39,8 @@ std::atomic_int Tilter::verticalPos = 5000;
 
 void initialize() {
   okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
+
+  robot::gyro.reset();
 
   robot::tilter = std::make_shared<Tilter>(
     std::make_shared<okapi::Motor>(-10),
@@ -70,4 +74,8 @@ void initialize() {
   robot::lift->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
   robot::screen::notification = "Get Your Stickers!";
+
+  while(robot::gyro.is_calibrating()){
+    pros::delay(100);
+  }
 }
