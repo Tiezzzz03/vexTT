@@ -44,7 +44,25 @@ AutonomousRoutine(
     field->finishDrawing();
   },
   [](){
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {4_ft, 0_ft, 0_deg}}, "CubeApproach", {0.8,1,10});
 
+    robot::intake->moveVoltage(-12000);
+    pros::delay(250);
+
+    robot::lift->moveMidTower();
+    robot::chassis->moveDistanceAsync(-2_in);
+    robot::lift->waitUntilSettled();
+
+    robot::lift->reset();
+    pros::delay(250);
+
+    robot::intake->moveVoltage(12000);
+    pros::delay(250);
+
+    robot::chassisProfiler->setTarget("CubeApproach");
+    robot::chassisProfiler->waitUntilSettled();
+
+    
   }
 ),
 
