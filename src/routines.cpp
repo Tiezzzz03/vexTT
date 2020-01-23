@@ -21,6 +21,9 @@ AutonomousRoutine(
   "#ff00ff Cube Push#",
   [](screen::ttField *field){
     field->draw(screen::scoringZone::farRed, screen::color::orange, 1);
+    field->draw(screen::scoringZone::nearRed, screen::color::orange, 1);
+    field->draw(screen::scoringZone::farBlue, screen::color::green, 1);
+    field->draw(screen::scoringZone::nearBlue, screen::color::green, 1);
     field->finishDrawing();
   },
   [](){
@@ -36,6 +39,8 @@ AutonomousRoutine(
 AutonomousRoutine(
   "#ff0000 Red Small Zone 5",
   [](screen::ttField *field){
+    field->draw(screen::cubeGroup::left4, 0);
+    field->draw(screen::scoringZone::nearRed, screen::color::orange, 5);
     field->finishDrawing();
   },
   [](){
@@ -46,6 +51,8 @@ AutonomousRoutine(
 AutonomousRoutine(
   "#0000ff Blue Small Zone 5",
   [](screen::ttField *field){
+    field->draw(screen::cubeGroup::right4, 0);
+    field->draw(screen::scoringZone::nearBlue, screen::color::green, 5);
     field->finishDrawing();
   },
   [](){
