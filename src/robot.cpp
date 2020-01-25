@@ -56,7 +56,7 @@ void initialize() {
 
   robot::chassis = okapi::ChassisControllerBuilder()
                       .withMotors(robot::lDrive, robot::rDrive)
-                      .withDimensions(okapi::AbstractMotor::gearset::green, okapi::ChassisScales({3.25_in, 10_in}, okapi::imev5GreenTPR * 0.6))
+                      .withDimensions(okapi::AbstractMotor::gearset::green, okapi::ChassisScales({5.42_in, 10_in}, okapi::imev5GreenTPR))
                       .build();
 
   robot::chassisProfiler = okapi::AsyncMotionProfileControllerBuilder()
