@@ -8,8 +8,6 @@ namespace robot {
 
 okapi::Controller controller;
 
-pros::Imu gyro(9);
-
 std::shared_ptr<Lift> lift;
 std::shared_ptr<Tilter> tilter;
 std::shared_ptr<okapi::MotorGroup> intake;
@@ -39,8 +37,6 @@ std::atomic_int Tilter::verticalPos = 5000;
 
 void initialize() {
   okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
-
-  robot::gyro.reset();
 
   robot::tilter = std::make_shared<Tilter>(
     std::make_shared<okapi::Motor>(-10),
@@ -74,8 +70,4 @@ void initialize() {
   robot::lift->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
   robot::screen::notification = "Get Your Stickers!";
-
-  while(robot::gyro.is_calibrating()){
-    pros::delay(100);
-  }
 }
