@@ -3,6 +3,8 @@
 Lift::Lift(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
   motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
 
+  controller->setOutputLimits(12000,-12000);
+
   tare();
 }
 
@@ -72,7 +74,7 @@ void Lift::loop(){
       power = 0;
     }
 
-    motor->controllerSet(power);
+    motor->moveVoltage(power);
 
     pros::delay(10);
   }

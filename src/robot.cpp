@@ -44,7 +44,7 @@ void initialize() {
   
   robot::lift = std::make_shared<Lift>(
     std::make_shared<okapi::Motor>(20),
-    okapi::IterativePosPIDController::Gains({0.001, 0, 0, 0}));
+    okapi::IterativePosPIDController::Gains({55, 0, 1, 0}));
 
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-17, 18}));
   robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  4, -5}));
