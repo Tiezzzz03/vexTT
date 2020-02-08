@@ -55,9 +55,30 @@ void opcontrol() {
     // If A is pressed, lock control to forwards/backwards at 40% speed, otherwise do standard tank control
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){
       robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.4, 0);
+
+      if(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) < -0.05){
+        robot::intake->moveVoltage(-6000);
+      }else if(robot::controller.getDigital(okapi::ControllerDigital::R1) || robot::controller.getDigital(okapi::ControllerDigital::R2)){
+        robot::intake->moveVoltage(6000);
+      }else{
+        robot::intake->moveVoltage(0);
+      }
     }else{
-      robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
-                                       robot::controller.getAnalog(okapi::ControllerAnalog::rightY));
+      robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
+                                         robot::controller.getAnalog(okapi::ControllerAnalog::rightX));
+
+      if(robot::controller.getDigital(okapi::ControllerDigital::R1)){
+        robot::intake->moveVoltage(12000);
+
+      }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
+        robot::intake->moveVoltage(4000);
+
+      }else if(robot::controller.getDigital(okapi::ControllerDigital::Y)){
+        robot::intake->moveVoltage(-6000);
+      
+      }else{
+        robot::intake->moveVoltage(0);
+      }
     }
 
     /*
@@ -66,18 +87,7 @@ void opcontrol() {
      * R2 -> half power intake
      * R3/Y -> half power outtake
     **/
-    if(robot::controller.getDigital(okapi::ControllerDigital::R1)){
-      robot::intake->moveVoltage(12000);
-
-    }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
-      robot::intake->moveVoltage(4000);
-
-    }else if(robot::controller.getDigital(okapi::ControllerDigital::Y)){
-      robot::intake->moveVoltage(-6000);
-      
-    }else{
-      robot::intake->moveVoltage(0);
-    }
+    
 
     /*
      * Lift control
