@@ -46,6 +46,7 @@ void opcontrol() {
   okapi::ControllerButton buttonL2 = robot::controller[okapi::ControllerDigital::L2];
   okapi::ControllerButton buttonL3 = robot::controller[okapi::ControllerDigital::right];
   okapi::ControllerButton buttonDown = robot::controller[okapi::ControllerDigital::down];
+  okapi::ControllerButton buttonB = robot::controller[okapi::ControllerDigital::B];
 
   // in order to control tray with a toggle, its state is stored here
   bool trayDown = true;
@@ -56,29 +57,9 @@ void opcontrol() {
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){
       robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.4, 0);
 
-      if(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) < -0.05){
-        robot::intake->moveVoltage(-6000);
-      }else if(robot::controller.getDigital(okapi::ControllerDigital::R1) || robot::controller.getDigital(okapi::ControllerDigital::R2)){
-        robot::intake->moveVoltage(6000);
-      }else{
-        robot::intake->moveVoltage(0);
-      }
     }else{
       robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
-                                         robot::controller.getAnalog(okapi::ControllerAnalog::rightX));
-
-      if(robot::controller.getDigital(okapi::ControllerDigital::R1)){
-        robot::intake->moveVoltage(12000);
-
-      }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
-        robot::intake->moveVoltage(4000);
-
-      }else if(robot::controller.getDigital(okapi::ControllerDigital::Y)){
-        robot::intake->moveVoltage(-6000);
-      
-      }else{
-        robot::intake->moveVoltage(0);
-      }
+                                         robot::controller.getAnalog(okapi::ControllerAnalog::rightX) * 0.5); 
     }
 
     /*
@@ -87,7 +68,19 @@ void opcontrol() {
      * R2 -> half power intake
      * R3/Y -> half power outtake
     **/
-    
+    if(robot::controller.getDigital(okapi::ControllerDigital::R1)){
+        robot::intake->moveVoltage(12000);
+
+      }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
+        robot::intake->moveVoltage(4000);
+
+      }else if(robot::controller.getDigital(okapi::ControllerDigital::Y) || 
+                (robot::controller.getAnalog(okapi::ControllerAnalog::leftY) < -0.05 && robot::controller.getDigital(okapi::ControllerDigital::A))){
+        robot::intake->moveVoltage(-6000);
+      
+      }else{
+        robot::intake->moveVoltage(0);
+      }
 
     /*
      * Lift control
@@ -115,6 +108,17 @@ void opcontrol() {
         robot::lift->reset();
         robot::tilter->reset();
         trayDown = true;
+      }
+    }
+
+    if(buttonB.changed()){
+      if(buttonB.isPressed()){
+        robot::lift->getTask()->suspend();
+        robot::lift->getMotor()->moveVoltage(-6000);
+
+      }else{
+        robot::lift->getTask()->resume();
+        robot::lift->reset();
       }
     }
 

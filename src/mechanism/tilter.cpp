@@ -5,7 +5,7 @@ Tilter::Tilter(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePos
 
   target.store(0);
   tare();
-  controller->setOutputLimits(0.33, -0.6);
+  controller->setOutputLimits(0.33, -1);
 }
 
 Tilter::~Tilter(){

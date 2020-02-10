@@ -29,18 +29,18 @@ std::atomic_int Lift::restingPos = 0;
 std::atomic_int Lift::lowTowerPos = 1550;
 std::atomic_int Lift::midTowerPos = 2000;
 
-std::atomic_int Tilter::restingPos = 100;
-std::atomic_int Tilter::readyLiftPos = 100;
-std::atomic_int Tilter::pidThreshold = 3000;
-std::atomic_int Tilter::verticalPos = 5000;
+std::atomic_int Tilter::restingPos = 50;
+std::atomic_int Tilter::readyLiftPos = 50;
+std::atomic_int Tilter::pidThreshold = 2250;
+std::atomic_int Tilter::verticalPos = 4050;
 
 
 void initialize() {
   okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
 
   robot::tilter = std::make_shared<Tilter>(
-    std::make_shared<okapi::Motor>(-10),
-    okapi::IterativePosPIDController::Gains({0.00036, 0, 0.00006, 0}));
+    std::make_shared<okapi::Motor>(12),
+    okapi::IterativePosPIDController::Gains({0.0005, 0, 0.00006, 0}));
   
   robot::lift = std::make_shared<Lift>(
     std::make_shared<okapi::Motor>(20),
