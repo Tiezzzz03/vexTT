@@ -53,7 +53,7 @@ void opcontrol() {
 
   while(true){
 
-    // If A is pressed, lock control to forwards/backwards at 40% speed, otherwise do standard tank control
+    // If A is pressed, lock control to forwards/backwards at 40% speed, otherwise do standard arcade control
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){
       robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.4, 0);
 
@@ -69,18 +69,18 @@ void opcontrol() {
      * R3/Y -> half power outtake
     **/
     if(robot::controller.getDigital(okapi::ControllerDigital::R1)){
-        robot::intake->moveVoltage(12000);
+      robot::intake->moveVoltage(12000);
 
-      }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
-        robot::intake->moveVoltage(4000);
+    }else if(robot::controller.getDigital(okapi::ControllerDigital::R2)){
+      robot::intake->moveVoltage(4000);
 
-      }else if(robot::controller.getDigital(okapi::ControllerDigital::Y) || 
-                (robot::controller.getAnalog(okapi::ControllerAnalog::leftY) < -0.05 && robot::controller.getDigital(okapi::ControllerDigital::A))){
-        robot::intake->moveVoltage(-6000);
+    }else if(robot::controller.getDigital(okapi::ControllerDigital::Y) || 
+              (robot::controller.getAnalog(okapi::ControllerAnalog::leftY) < -0.05 && robot::controller.getDigital(okapi::ControllerDigital::A))){
+      robot::intake->moveVoltage(-6000);
       
-      }else{
-        robot::intake->moveVoltage(0);
-      }
+    }else{
+      robot::intake->moveVoltage(0);
+    }
 
     /*
      * Lift control
@@ -88,6 +88,8 @@ void opcontrol() {
      * 
      * L1 -> middle height tower
      * L2 -> low/alliance height tower
+     * B  -> Pause "proper" control and force the lift down
+     *          useful for reseting the lift after using the cube lock
     **/
     if(buttonL1.changed()){
       if(buttonL1.isPressed()){
@@ -152,8 +154,12 @@ void opcontrol() {
       }
     }
 
+    // overly complicated macro to avoid accidental triggering
     // generate paths and save to SD card
-    if(robot::controller.getDigital(okapi::ControllerDigital::X) && robot::controller.getDigital(okapi::ControllerDigital::B)){
+    if(robot::controller.getDigital(okapi::ControllerDigital::X) && 
+       robot::controller.getDigital(okapi::ControllerDigital::B) &&
+       robot::controller.getDigital(okapi::ControllerDigital::down) &&
+       robot::controller.getDigital(okapi::ControllerDigital::left)){
       generatePaths();
     }
 
