@@ -53,13 +53,13 @@ void opcontrol() {
 
   while(true){
 
-    // If A is pressed, lock control to forwards/backwards at 40% speed, otherwise do standard arcade control
+    // If A is pressed, lock control to forwards/backwards at 40% speed, otherwise do standard tank control
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){
       robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.4, 0);
 
     }else{
-      robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
-                                         robot::controller.getAnalog(okapi::ControllerAnalog::rightX) * 0.5); 
+      robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
+                                       robot::controller.getAnalog(okapi::ControllerAnalog::rightY)); 
     }
 
     /*
