@@ -3,7 +3,7 @@
 
 using namespace okapi::literals;
 
-uint16_t selection = 5;
+uint16_t selection = 0;
 
 std::vector<AutonomousRoutine> routines = {
 
@@ -37,7 +37,7 @@ AutonomousRoutine(
 ),
 
 AutonomousRoutine(
-  "#ff0000 Red Small Zone 5",
+  "#ff0000 Red Unprot Zone 5",
   [](screen::ttField *field){
     field->draw(screen::cubeGroup::left4, 0);
     field->draw(screen::scoringZone::nearRed, screen::color::orange, 5);
@@ -84,7 +84,7 @@ AutonomousRoutine(
 ),
 
 AutonomousRoutine(
-  "#ff0000 Red Big Zone",
+  "#ff0000 Red Prot Zone",
   [](screen::ttField *field){
   },
   [](){
@@ -93,18 +93,18 @@ AutonomousRoutine(
     //okapi::IterativePosPIDController turningController({.001, 0, 0, 0}, okapi::TimeUtilFactory::createDefault());
 
     robot::lift->moveMidTower();
-    robot::chassis->getModel()->driveVectorVoltage(0.4, 0);
-    pros::delay(500);
-
     robot::chassis->getModel()->driveVectorVoltage(-0.4, 0);
     pros::delay(500);
 
-    robot::lift->reset();
-    pros::delay(500);
-
     robot::chassis->getModel()->stop();
+    while(robot::lift->getMotor()->getPosition() < 1800){
+      pros::delay(10);
+    }
+
+    robot::lift->reset();
+    pros::delay(1000);
+
     robot::intake->moveVoltage(12000);
-    pros::delay(500);
 
     robot::chassisProfiler->setTarget("CubeApproach");
     robot::chassisProfiler->waitUntilSettled();
@@ -128,7 +128,7 @@ AutonomousRoutine(
 ),
 
 AutonomousRoutine(
-  "#0000ff Blue Small Zone 5",
+  "#0000ff Blue Unprot Zone 5",
   [](screen::ttField *field){
     field->draw(screen::cubeGroup::right4, 0);
     field->draw(screen::scoringZone::nearBlue, screen::color::green, 5);
@@ -175,7 +175,7 @@ AutonomousRoutine(
 ),
 
 AutonomousRoutine(
-  "#0000ff Blue Big Zone",
+  "#0000ff Blue Prot Zone",
   [](screen::ttField *field){
   },
   [](){

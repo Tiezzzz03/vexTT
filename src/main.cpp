@@ -88,7 +88,7 @@ void opcontrol() {
      * 
      * L1 -> middle height tower
      * L2 -> low/alliance height tower
-     * B  -> Pause "proper" control and force the lift down
+     * B  -> Pause proper control and force the lift down
      *          useful for reseting the lift after using the cube lock
     **/
     if(buttonL1.changed()){
