@@ -15,7 +15,6 @@ std::shared_ptr<okapi::MotorGroup> lDrive;
 std::shared_ptr<okapi::MotorGroup> rDrive;
 
 std::shared_ptr<pros::Imu> imu;
-std::shared_ptr<okapi::ADIButton> liftReset;
 
 std::shared_ptr<okapi::ChassisController> chassis;
 std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
@@ -47,6 +46,7 @@ void initialize() {
   
   robot::lift = std::make_shared<Lift>(
     std::make_shared<okapi::Motor>(20),
+    std::make_shared<okapi::ADIButton>(2),
     okapi::IterativePosPIDController::Gains({55, 0, 1, 0}));
 
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-17, 18}));
@@ -56,8 +56,6 @@ void initialize() {
   robot::imu = std::make_shared<pros::Imu>(11);
   robot::imu->reset();
   uint32_t calibrationTime = pros::millis() + 2200;
-
-  robot::liftReset = std::make_shared<okapi::ADIButton>(2);
 
   robot::chassis = okapi::ChassisControllerBuilder()
                       .withMotors(robot::lDrive, robot::rDrive)

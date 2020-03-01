@@ -1,7 +1,7 @@
 #include "lift.hpp"
 
-Lift::Lift(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
-  motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
+Lift::Lift(std::shared_ptr<okapi::AbstractMotor> imotor, std::shared_ptr<okapi::AbstractButton> ibutton, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
+  motor(imotor), button(ibutton), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
 
   controller->setOutputLimits(12000,-12000);
 
@@ -26,7 +26,7 @@ void Lift::reset(){
 }
 
 bool Lift::isSettled(){
-  return controller->isSettled();
+  return controller->isSettled() || (controller->getTarget() == restingPos && button->isPressed());
 }
 
 void Lift::waitUntilSettled(){
@@ -57,8 +57,8 @@ pros::Task *Lift::getTask(){
   return thread;
 }
 
-void Lift::trampoline(void *angler){
-  static_cast<Lift*>(angler)->loop();
+void Lift::trampoline(void *lift){
+  static_cast<Lift*>(lift)->loop();
 }
 
 void Lift::loop(){
@@ -66,6 +66,7 @@ void Lift::loop(){
   double power;
 
   while(true){
+    if(button->isPressed()) motor->tarePosition();
     currentPos = motor->getPosition();
 
     if(controller->getTarget() >= currentPos){
