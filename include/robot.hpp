@@ -18,6 +18,7 @@ extern std::shared_ptr<okapi::MotorGroup> lDrive;
 extern std::shared_ptr<okapi::MotorGroup> rDrive;
 
 extern std::shared_ptr<pros::Imu> imu;
+extern std::shared_ptr<okapi::ADIButton> liftReset;
 
 extern std::shared_ptr<okapi::ChassisController> chassis;
 extern std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
