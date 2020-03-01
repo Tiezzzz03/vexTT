@@ -36,7 +36,7 @@ void opcontrol() {
   robot::chassis->getModel()->setMaxVelocity(200);
   
   // set the screen to display ez logo gif
-  robot::screen::state = screenMode::ez;
+  robot::screen::state = screenMode::notification;
 
   // disable the profile controller, as the operator will control it manually
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);
@@ -51,7 +51,34 @@ void opcontrol() {
   // in order to control tray with a toggle, its state is stored here
   bool trayDown = true;
 
+  robot::intake->moveVoltage(-4000);
+  pros::delay(750);
+    
+  robot::intake->moveVoltage(0);
+  robot::chassis->getModel()->forward(0.4);
+  pros::delay(500);
+
+  robot::chassis->getModel()->stop();
+  robot::tilter->stack();
+  pros::delay(1500);
+
+  robot::intake->moveVoltage(4000);
+  pros::delay(500);
+
+  robot::intake->moveVoltage(0);
+  pros::delay(1000);
+
+  robot::tilter->reset();
+  robot::intake->moveVoltage(-6000);
+  robot::chassis->getModel()->forward(-0.3);
+  pros::delay(1000);
+
+  robot::chassis->getModel()->stop();
+  robot::intake->moveVoltage(0);
+
   while(true){
+
+    robot::screen::notification = std::to_string(robot::imu->get_rotation());
 
     // If A is pressed, lock control to forwards/backwards at 40% speed, otherwise do standard tank control
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){

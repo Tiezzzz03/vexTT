@@ -14,6 +14,8 @@ std::shared_ptr<okapi::MotorGroup> intake;
 std::shared_ptr<okapi::MotorGroup> lDrive;
 std::shared_ptr<okapi::MotorGroup> rDrive;
 
+std::shared_ptr<pros::Imu> imu;
+
 std::shared_ptr<okapi::ChassisController> chassis;
 std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
 
@@ -40,7 +42,7 @@ void initialize() {
 
   robot::tilter = std::make_shared<Tilter>(
     std::make_shared<okapi::Motor>(12),
-    okapi::IterativePosPIDController::Gains({0.0005, 0, 0.00006, 0}));
+    okapi::IterativePosPIDController::Gains({0.002, 0, 0.00006, 0}));
   
   robot::lift = std::make_shared<Lift>(
     std::make_shared<okapi::Motor>(20),
@@ -49,6 +51,10 @@ void initialize() {
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-17, 18}));
   robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  4, -5}));
   robot::rDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  2, -3}));
+
+  robot::imu = std::make_shared<pros::Imu>(11);
+  robot::imu->reset();
+  uint32_t calibrationTime = pros::millis() + 2200;
 
   robot::chassis = okapi::ChassisControllerBuilder()
                       .withMotors(robot::lDrive, robot::rDrive)
@@ -70,4 +76,5 @@ void initialize() {
   robot::lift->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
   robot::screen::notification = "Get Your Stickers!";
+  while(!robot::imu->is_calibrating()) {pros::delay(100);}
 }
