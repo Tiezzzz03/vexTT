@@ -51,31 +51,6 @@ void opcontrol() {
   // in order to control tray with a toggle, its state is stored here
   bool trayDown = true;
 
-  robot::intake->moveVoltage(-4000);
-  pros::delay(750);
-    
-  robot::intake->moveVoltage(0);
-  robot::chassis->getModel()->forward(0.4);
-  pros::delay(500);
-
-  robot::chassis->getModel()->stop();
-  robot::tilter->stack();
-  pros::delay(1500);
-
-  robot::intake->moveVoltage(4000);
-  pros::delay(500);
-
-  robot::intake->moveVoltage(0);
-  pros::delay(1000);
-
-  robot::tilter->reset();
-  robot::intake->moveVoltage(-6000);
-  robot::chassis->getModel()->forward(-0.3);
-  pros::delay(1000);
-
-  robot::chassis->getModel()->stop();
-  robot::intake->moveVoltage(0);
-
   while(true){
 
     robot::screen::notification = std::to_string(robot::imu->get_rotation());
