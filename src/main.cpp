@@ -90,8 +90,6 @@ void opcontrol() {
      * 
      * L1 -> middle height tower
      * L2 -> low/alliance height tower
-     * B  -> Pause proper control and force the lift down
-     *          useful for reseting the lift after using the cube lock
     **/
     if(buttonL1.changed()){
       if(buttonL1.isPressed()){
@@ -115,17 +113,6 @@ void opcontrol() {
       }
     }
 
-    if(buttonB.changed()){
-      if(buttonB.isPressed()){
-        robot::lift->getTask()->suspend();
-        robot::lift->getMotor()->moveVoltage(-6000);
-
-      }else{
-        robot::lift->getTask()->resume();
-        robot::lift->reset();
-      }
-    }
-
     /*
      * Tilter control
      * While the lift is up, control is disabled
@@ -133,6 +120,10 @@ void opcontrol() {
      * L3/right -> toggle tray position
     **/
     if(!buttonL1.isPressed() && !buttonL2.isPressed()){
+
+      if(robot::controller.getDigital(okapi::ControllerDigital::up)){
+        robot::tilter->prime();
+      }
 
       if(buttonL3.changedToPressed()){
       

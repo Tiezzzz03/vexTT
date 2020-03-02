@@ -1,7 +1,7 @@
 #include "tilter.hpp"
 
 Tilter::Tilter(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
-  motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
+  motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::withSettledUtilParams(150, 1000), std::move(iderivativeFilter))){
 
   target.store(0);
   tare();
@@ -15,6 +15,11 @@ Tilter::~Tilter(){
 
 void Tilter::stack(){
   target.store(verticalPos);
+  controller->setTarget(target);
+}
+
+void Tilter::prime(){
+  target.store(primePos);
   controller->setTarget(target);
 }
 
@@ -78,7 +83,7 @@ void Tilter::loop(){
   while(true){
     currentPos = motor->getPosition();
 
-    if(target == verticalPos && currentPos <= pidThreshold){
+    if(target >= pidThreshold && currentPos <= pidThreshold){
       power = 1;
     }else{
       power = controller->step(currentPos);

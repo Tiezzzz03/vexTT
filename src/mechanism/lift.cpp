@@ -26,7 +26,7 @@ void Lift::reset(){
 }
 
 bool Lift::isSettled(){
-  return controller->isSettled() || (controller->getTarget() == restingPos && button->isPressed());
+  return controller->getTarget() == restingPos ? button->isPressed() : controller->isSettled();
 }
 
 void Lift::waitUntilSettled(){
@@ -71,8 +71,10 @@ void Lift::loop(){
 
     if(controller->getTarget() >= currentPos){
       power = controller->step(currentPos);
-    }else{
+    }else if(button->isPressed()){
       power = 0;
+    }else{
+      power = -12000;
     }
 
     motor->moveVoltage(power);

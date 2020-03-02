@@ -11,10 +11,13 @@ public:
   static std::atomic_int restingPos;
   static std::atomic_int readyLiftPos;
   static std::atomic_int pidThreshold;
+  static std::atomic_int primePos;
   static std::atomic_int verticalPos;
   
 
   void stack();
+
+  void prime();
 
   void readyLift();
 

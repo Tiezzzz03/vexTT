@@ -27,14 +27,15 @@ namespace screen {
 
 }
 
-std::atomic_int Lift::restingPos = 0;
-std::atomic_int Lift::lowTowerPos = 1550;
-std::atomic_int Lift::midTowerPos = 2000;
+std::atomic_int Lift::restingPos     = 0;
+std::atomic_int Lift::lowTowerPos    = 1550;
+std::atomic_int Lift::midTowerPos    = 2000;
 
-std::atomic_int Tilter::restingPos = 50;
+std::atomic_int Tilter::restingPos   = 50;
 std::atomic_int Tilter::readyLiftPos = 50;
-std::atomic_int Tilter::pidThreshold = 2250;
-std::atomic_int Tilter::verticalPos = 3950;
+std::atomic_int Tilter::pidThreshold = 2200;
+std::atomic_int Tilter::primePos     = 2300;
+std::atomic_int Tilter::verticalPos  = 3950;
 
 
 void initialize() {

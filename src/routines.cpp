@@ -3,7 +3,7 @@
 
 using namespace okapi::literals;
 
-uint16_t selection = 2;
+uint16_t selection = 5;
 
 double boostVoltage(double ivoltage, double boost){
   return ivoltage > 0 ? ivoltage + boost :
@@ -50,10 +50,10 @@ AutonomousRoutine(
     field->finishDrawing();
   },
   [](){
-    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {3.1_ft, 0_ft, 0_deg}}, "1A", {0.77, 0.8,10});
-    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {1_ft, 0_ft, 0_deg}}, "1B", {0.15,1,10});
-    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {3_ft, 0_ft, 0_deg}}, "1C", {1,0.5,10});
-    okapi::IterativePosPIDController turningController({0.03, 0, 0.0015, 0}, okapi::TimeUtilFactory::withSettledUtilParams(3));
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {3.15_ft, 0_ft, 0_deg}}, "1A", {0.8, 0.8,10});
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {0.75_ft, 0_ft, 0_deg}}, "1B", {0.45,1,10});
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {2.8_ft, 0_ft, 0_deg}}, "1C", {1,0.75,10});
+    okapi::IterativePosPIDController turningController({0.03, 0, 0.0015, 0}, okapi::TimeUtilFactory::withSettledUtilParams(3, 10, 10_ms));
     
     robot::lift->moveMidTower();
 
@@ -62,31 +62,29 @@ AutonomousRoutine(
 
     robot::chassis->getModel()->stop();
     robot::lift->reset();
+    pros::delay(250);
     robot::lift->waitUntilSettled();
 
     robot::chassisProfiler->setTarget("1A");
     robot::intake->moveVoltage(12000);   
     robot::chassisProfiler->waitUntilSettled();
     
-    turningController.setTarget(-23);
+    turningController.setTarget(-25);
     do{
       robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
-    }while(!turningController.isSettled());
+    }while(!turningController.isSettled() || robot::imu->get_rotation() > -10);
     robot::chassis->stop();
 
     robot::chassisProfiler->setTarget("1B");
     robot::chassisProfiler->waitUntilSettled();
 
-    pros::delay(500);
-
     robot::chassisProfiler->setTarget("1B", true);
     robot::chassisProfiler->waitUntilSettled();
 
-    turningController.setTarget(155);
+    turningController.setTarget(152);
     do{
       robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
-      std::cout << robot::imu->get_rotation();
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() < 130);
     robot::chassis->stop();
@@ -96,19 +94,19 @@ AutonomousRoutine(
     pros::delay(750);
     
     robot::intake->moveVoltage(0);
+    robot::tilter->prime();
     robot::chassisProfiler->waitUntilSettled();
     
     robot::tilter->stack();
-    pros::delay(1500);
-
-    robot::intake->moveVoltage(4000);
+    robot::intake->moveVoltage(6000);
     pros::delay(500);
 
     robot::intake->moveVoltage(0);
-    pros::delay(1000);
+    robot::tilter->waitUntilSettled();
 
     robot::tilter->reset();
-    robot::intake->moveVoltage(-6000);
+    robot::intake->moveVoltage(-8000);
+    pros::delay(300);
     robot::chassis->getModel()->forward(-0.3);
     pros::delay(1000);
 
@@ -168,6 +166,7 @@ AutonomousRoutine(
     pros::delay(750);
     
     robot::intake->moveVoltage(0);
+    robot::tilter->prime();
     robot::chassisProfiler->waitUntilSettled();
 
     robot::tilter->stack();
@@ -198,8 +197,8 @@ AutonomousRoutine(
   },
   [](){
     robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {3.1_ft, 0_ft, 0_deg}}, "1A", {0.77, 0.8,10});
-    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {1_ft, 0_ft, 0_deg}}, "1B", {0.15,1,10});
-    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {3_ft, 0_ft, 0_deg}}, "1C", {1,0.5,10});
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {0.9_ft, 0_ft, 0_deg}}, "1B", {0.25,1,10});
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {2.8_ft, 0_ft, 0_deg}}, "1C", {1,0.5,10});
     okapi::IterativePosPIDController turningController({0.03, 0, 0.0015, 0}, okapi::TimeUtilFactory::withSettledUtilParams(3));
     
     robot::lift->moveMidTower();
@@ -270,8 +269,7 @@ AutonomousRoutine(
   },
   [](){
     robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {1.5_ft, 0_ft, 0_deg}}, "2A", {1,1,10});
-    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {3_ft, 0_ft, 0_deg}}, "2B", {0.77,0.8,10});
-    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {1.2_ft, 0_ft, 0_deg}}, "2C", {1,1,10});
+    robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {2.6_ft, 0_ft, 0_deg}}, "2B", {0.77,0.8,10});
     okapi::IterativePosPIDController turningController({0.03, 0, 0.0015, 0}, okapi::TimeUtilFactory::withSettledUtilParams(3));
 
     robot::lift->moveMidTower();
@@ -281,8 +279,8 @@ AutonomousRoutine(
 
     robot::chassis->getModel()->stop();
     robot::lift->reset();
+    pros::delay(250);
     robot::lift->waitUntilSettled();
-
     robot::intake->moveVoltage(12000);
 
     robot::chassisProfiler->setTarget("2A");
@@ -292,7 +290,7 @@ AutonomousRoutine(
     do{
       robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
-    }while(!turningController.isSettled());
+    }while(!turningController.isSettled() || robot::imu->get_rotation() > -45);
     robot::chassis->stop();
 
     robot::chassisProfiler->setTarget("2B");
@@ -310,27 +308,18 @@ AutonomousRoutine(
     }while(!turningController.isSettled() || robot::imu->get_rotation() > -180);
     robot::chassis->stop();
 
-    robot::chassisProfiler->setTarget("2C");
-    robot::intake->moveVoltage(-4000);
-    pros::delay(750);
-    
-    robot::intake->moveVoltage(0);
-    robot::chassisProfiler->waitUntilSettled();
-
-    robot::tilter->stack();
+    robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+    robot::intake->moveVoltage(-6000);
     pros::delay(1500);
 
-    robot::intake->moveVoltage(4000);
-    pros::delay(500);
-
-    robot::intake->moveVoltage(0);
+    robot::lift->moveLowTower();
     pros::delay(1000);
 
-    robot::tilter->reset();
-    robot::intake->moveVoltage(-6000);
+    robot::lift->reset();
     robot::chassis->getModel()->forward(-0.3);
     pros::delay(1000);
 
+    robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
     robot::chassis->getModel()->stop();
     robot::intake->moveVoltage(0);
   }
