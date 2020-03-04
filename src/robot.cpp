@@ -28,7 +28,7 @@ namespace screen {
 }
 
 std::atomic_int Lift::restingPos     = 0;
-std::atomic_int Lift::lowTowerPos    = 1550;
+std::atomic_int Lift::lowTowerPos    = 1400;
 std::atomic_int Lift::midTowerPos    = 2000;
 
 std::atomic_int Tilter::restingPos   = 50;
