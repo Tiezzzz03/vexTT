@@ -2,55 +2,65 @@
 
 using namespace okapi::literals;
 
+extern void screenControllerFN(void* param);
+
 namespace robot {
 
 okapi::Controller controller;
 
-std::shared_ptr<Angler> angler;
+std::shared_ptr<Lift> lift;
+std::shared_ptr<Tilter> tilter;
 std::shared_ptr<okapi::MotorGroup> intake;
 std::shared_ptr<okapi::MotorGroup> lDrive;
 std::shared_ptr<okapi::MotorGroup> rDrive;
 
-std::shared_ptr<okapi::ADIEncoder> lEnc;
-std::shared_ptr<okapi::ADIEncoder> rEnc;
-std::shared_ptr<okapi::ADIEncoder> mEnc;
+std::shared_ptr<pros::Imu> imu;
 
 std::shared_ptr<okapi::ChassisController> chassis;
 std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
 
 namespace screen {
   pros::Task *controller;
-  volatile screenMode state;
+  volatile std::atomic<screenMode> state;
   std::string notification;
 }
 
 }
 
-extern void screenControllerFN(void* param);
+std::atomic_int Lift::restingPos     = 0;
+std::atomic_int Lift::lowTowerPos    = 1550;
+std::atomic_int Lift::midTowerPos    = 2000;
 
-std::atomic_int Angler::restingPos = 200;
-std::atomic_int Angler::pidThreshold = 1600;
-std::atomic_int Angler::verticalPos = 4500;
+std::atomic_int Tilter::restingPos   = 50;
+std::atomic_int Tilter::readyLiftPos = 50;
+std::atomic_int Tilter::pidThreshold = 2200;
+std::atomic_int Tilter::primePos     = 2300;
+std::atomic_int Tilter::verticalPos  = 3950;
 
 
 void initialize() {
   okapi::Logger::setDefaultLogger(std::make_shared<okapi::Logger>(std::make_unique<okapi::Timer>(), "/ser/sout", okapi::Logger::LogLevel::debug));
 
-  robot::angler = std::make_shared<Angler>(
-    std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-1, 7})),
-    okapi::IterativePosPIDController::Gains({0.00075, 0, 0.00005, 0}));
-    
-  robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-2,10}));
-  robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({ 8, 9}));
-  robot::rDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-3,-4}));
+  robot::tilter = std::make_shared<Tilter>(
+    std::make_shared<okapi::Motor>(12),
+    okapi::IterativePosPIDController::Gains({0.002, 0, 0.00006, 0}));
+  
+  robot::lift = std::make_shared<Lift>(
+    std::make_shared<okapi::Motor>(20),
+    std::make_shared<okapi::ADIButton>(1), std::make_shared<okapi::ADIButton>(2),
+    okapi::IterativePosPIDController::Gains({55, 0, 1, 0}));
 
-  robot::lEnc = std::make_shared<okapi::ADIEncoder>(7,8, true);
-  robot::rEnc = std::make_shared<okapi::ADIEncoder>(1,2);
-  robot::mEnc = std::make_shared<okapi::ADIEncoder>(5,6);
+  robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-17, 18}));
+  robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  4, -5}));
+  robot::rDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  2, -3}));
+
+  robot::imu = std::make_shared<pros::Imu>(11);
+  robot::imu->reset();
+  uint32_t calibrationTime = pros::millis() + 2200;
 
   robot::chassis = okapi::ChassisControllerBuilder()
                       .withMotors(robot::lDrive, robot::rDrive)
-                      .withDimensions(okapi::ChassisScales({{4.125_in, 10_in}, okapi::imev5GreenTPR}))
+                      .withDimensions(okapi::AbstractMotor::gearset::green, okapi::ChassisScales({5.42_in, 10_in}, okapi::imev5GreenTPR))
                       .build();
 
   robot::chassisProfiler = okapi::AsyncMotionProfileControllerBuilder()
@@ -61,10 +71,12 @@ void initialize() {
 
   robot::intake->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
 
-  robot::angler->getMotor()->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
-  robot::angler->getMotor()->setGearing(okapi::AbstractMotor::gearset::red);
+  robot::tilter->getMotor()->setBrakeMode(okapi::AbstractMotor::brakeMode::brake);
+  robot::lift->getMotor()->setGearing(okapi::AbstractMotor::gearset::red);
 
-  robot::angler->startThread();
+  robot::tilter->startThread();
+  robot::lift->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
-  robot::screen::notification = "You wouldn't get it";
+  robot::screen::notification = "Get Your Stickers!";
+  while(robot::imu->is_calibrating()) {pros::delay(100);}
 }

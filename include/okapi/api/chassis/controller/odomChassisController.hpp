@@ -12,8 +12,13 @@
 #include "okapi/api/coreProsAPI.hpp"
 #include "okapi/api/odometry/odometry.hpp"
 #include "okapi/api/odometry/point.hpp"
+#include "okapi/api/units/QSpeed.hpp"
+#include "okapi/api/util/abstractRate.hpp"
 #include "okapi/api/util/logging.hpp"
 #include "okapi/api/util/timeUtil.hpp"
+#include <atomic>
+#include <memory>
+#include <valarray>
 
 namespace okapi {
 class OdomChassisController : public ChassisController {
@@ -35,7 +40,7 @@ class OdomChassisController : public ChassisController {
    * @param iturnThreshold minimum angle turn (smaller turns will be skipped)
    */
   OdomChassisController(TimeUtil itimeUtil,
-                        std::unique_ptr<Odometry> iodometry,
+                        std::shared_ptr<Odometry> iodometry,
                         const StateMode &imode = StateMode::FRAME_TRANSFORMATION,
                         const QLength &imoveThreshold = 0_mm,
                         const QAngle &iturnThreshold = 0_deg,
@@ -129,15 +134,21 @@ class OdomChassisController : public ChassisController {
    */
   CrossplatformThread *getOdomThread() const;
 
+  /**
+   * @return The internal odometry.
+   */
+  std::shared_ptr<Odometry> getOdometry();
+
   protected:
   std::shared_ptr<Logger> logger;
   TimeUtil timeUtil;
   QLength moveThreshold;
   QAngle turnThreshold;
-  std::unique_ptr<Odometry> odom;
+  std::shared_ptr<Odometry> odom;
   CrossplatformThread *odomTask{nullptr};
   std::atomic_bool dtorCalled{false};
   StateMode defaultStateMode{StateMode::FRAME_TRANSFORMATION};
+  std::atomic_bool odomTaskRunning{false};
 
   static void trampoline(void *context);
   void loop();

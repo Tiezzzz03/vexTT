@@ -1,4 +1,5 @@
 #include "main.h"
+#include "gif-pros/gifclass.hpp"
 #include "robot.hpp"
 #include "routines.hpp"
 #include <vector>
@@ -6,6 +7,32 @@
 #include <iostream>
 
 //extern const lv_img_t logo;
+
+lv_color_t getRainbowColorFromSeed(uint16_t colorSeed){
+  return LV_COLOR_MAKE(
+
+  static_cast<uint8_t>(
+    colorSeed <= 0x0FF ? 0xFF :
+    colorSeed <= 0x1FF ? 0x1FF - colorSeed :
+    colorSeed <= 0x3FF ? 0 :
+    colorSeed <= 0x4FF ? colorSeed - 0x400 :
+    0xFF
+  ),
+
+  static_cast<uint8_t>(
+    colorSeed <= 0x0FF ? colorSeed :
+    colorSeed <= 0x2FF ? 0xFF :
+    colorSeed <= 0x3FF ? 0x3FF - colorSeed :
+    0
+  ),
+
+  static_cast<uint8_t>(
+    colorSeed <= 0x1FF ? 0 :
+    colorSeed <= 0x2FF ? colorSeed - 0x200 :
+    colorSeed <= 0x4FF ? 0xFF :
+    0x5FF - colorSeed
+  ));
+}
 
 void screenControllerFN(void* param){
   auto logger = okapi::Logger::getDefaultLogger();
@@ -15,155 +42,168 @@ void screenControllerFN(void* param){
   lv_obj_t *scr = lv_obj_create(NULL, NULL);
   lv_scr_load(scr);
 
-  const int number_of_routines = routines.size();
+  const int numberOfRoutines = routines.size();
+  const int numberOfPanels   = static_cast<int>(screenMode::NUMPANELS);
 
   screenMode lastScreenState = screenMode::disabled;
 
-  //object pointers, may or may not be valid at any given time, depending on if they are in use
+  // Screen Panels
+  lv_obj_t *panel[numberOfPanels];
+  for(uint i = 0; i < numberOfPanels; i++){
+    panel[i] = lv_cont_create(scr, NULL);
+    lv_obj_set_size(panel[i], 480, 240);
+  }
 
-  //notification
-  lv_obj_t* notification_label;
 
-  //selection
-  lv_obj_t* main_list;
-  screen::ttField *field = nullptr;
-  std::vector<lv_obj_t*> routine_buttons;
-  std::vector<lv_obj_t*> routine_labels;
-  lv_obj_t* confirm_button;
-  bool selected;
+  // Disabled init
+  lv_obj_set_style(panel[0], &lv_style_plain);
 
-  //diagnostic
 
+  // Notification init
+  lv_obj_set_style(panel[1], &lv_style_plain);
+  lv_cont_set_layout(panel[1], LV_LAYOUT_CENTER);
+  lv_obj_set_hidden(panel[1], true);
+
+  lv_obj_t *notificationLabel = lv_label_create(panel[1], NULL);
+  lv_label_set_align(notificationLabel, LV_LABEL_ALIGN_CENTER);
+  lv_obj_set_style(panel[1], &screen::resources::redText);
+
+
+  // Selection init
+  lv_obj_set_style(panel[2], &lv_style_plain);
+  lv_obj_set_hidden(panel[2], true);
+
+  lv_obj_t *selectionList = lv_btnm_create(panel[2], NULL);
+  const char *buttonMap[2 * numberOfRoutines];
+  for(uint i = 0; i < numberOfRoutines; i++){
+    buttonMap[2*i] = routines[i].title;
+    buttonMap[2*i+1] = (i + 1 < numberOfRoutines) ? "\n" : "";
+  }
+  lv_btnm_set_map(selectionList, buttonMap);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BG, &screen::resources::listStyle);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_REL, &screen::resources::listStyle);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_PR, &screen::resources::pressedButton);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_TGL_REL, &screen::resources::pressedButton);
+  lv_btnm_set_style(selectionList, LV_BTNM_STYLE_BTN_TGL_PR, &screen::resources::pressedButton);
+  lv_btnm_set_toggle(selectionList, true, selection);
+  lv_btnm_set_recolor(selectionList, true);
+  lv_obj_set_size(selectionList, 240, 240);
+  screen::ttField field(panel[2]);
+  field.finishDrawing();
+  field.setPos(240, 0);
+  uint16_t toggledBtn;
+
+
+  // EZ Screen init
+  static lv_style_t rainbowStyle;
+  lv_style_copy(&rainbowStyle, &lv_style_plain);
+  lv_obj_set_style(panel[3], &rainbowStyle);
+  lv_obj_set_hidden(panel[3], true);  
+
+  lv_obj_t *gifContainer = lv_cont_create(panel[3], NULL);
+  lv_obj_set_style(gifContainer, &lv_style_transp);
+  lv_obj_set_size(gifContainer, 240, 240);
+  lv_obj_set_pos(gifContainer, 120, 0);
+  Gif ezgif("/usd/EZ/EZlogo.gif", gifContainer);
+  uint16_t colorSeed = 0;
+  
+
+  pros::delay(500);
   LOG_INFO(std::string("ScreenController: Initialized"));
 
   while(true){
-    switch(robot::screen::state){
-      case screenMode::notification:
-        if(lastScreenState != robot::screen::state){
-          LOG_INFO(std::string("ScreenController: Entering notification mode"));
+    if(robot::screen::state == lastScreenState){
+      switch(robot::screen::state){
+        case screenMode::disabled:
+          break;
 
-          if(field) {
-            delete field;
-            field = nullptr;
+        case screenMode::notification:
+          lv_label_set_text(notificationLabel, robot::screen::notification.c_str());
+          break;
+
+        case screenMode::selection:
+          toggledBtn = lv_btnm_get_toggled(selectionList);
+
+          if(selection != toggledBtn){
+            field.clean();
+            routines[toggledBtn].print(&field);
+            selection = toggledBtn;
           }
 
-          lv_obj_clean(scr);
+          break;
 
-          notification_label = lv_label_create(scr, NULL);
-          lv_label_set_long_mode(notification_label, LV_LABEL_LONG_BREAK);
-          lv_label_set_align(notification_label, LV_LABEL_ALIGN_CENTER);
-          lv_obj_set_size(notification_label, 480, 240);
-          lv_obj_align(notification_label, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
-          lv_obj_set_style(notification_label, &screen::resources::redText);
+        case screenMode::ez:
+          rainbowStyle.body.main_color = getRainbowColorFromSeed(colorSeed);
+          rainbowStyle.body.grad_color = getRainbowColorFromSeed(colorSeed - 0xFF);
 
-          lastScreenState = robot::screen::state;
-        }
-
-        lv_label_set_text(notification_label, robot::screen::notification.c_str());
-
-        break;
-      case screenMode::selection:
-        if(lastScreenState != robot::screen::state){
-          LOG_INFO(std::string("ScreenController: Entering selection mode"));
-
-          lv_obj_clean(scr);
-
-          field = new screen::ttField(scr);
-
-          selected = false;
-
-          main_list = lv_obj_create(scr, NULL);
-          lv_obj_set_style(main_list, &screen::resources::listStyle);
-          lv_obj_set_pos(main_list, 0, 0);
-          lv_obj_set_size(main_list, 240, 40 * number_of_routines);
-          lv_obj_set_drag(main_list, true);
-
-          routine_buttons.resize(number_of_routines);
-          routine_labels.resize(number_of_routines);
-
-          for(int i = 0; i < number_of_routines; i++){
-
-            routine_buttons[i] = lv_btn_create(main_list, NULL);
-
-            lv_obj_set_size(routine_buttons[i], 200, 40);
-
-            lv_btn_set_style(routine_buttons[i], LV_BTN_STYLE_REL, &screen::resources::listStyle);
-            lv_btn_set_style(routine_buttons[i], LV_BTN_STYLE_PR, &screen::resources::pressedButton);
-
-            if(i == 0){
-              //first term only
-              lv_obj_align(routine_buttons[i], NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
-
-            }else{
-              lv_obj_align(routine_buttons[i], routine_buttons[i-1], LV_ALIGN_OUT_BOTTOM_MID , 0, 0);
-            }
-
-
-            routine_labels[i] = lv_label_create(routine_buttons[i], NULL);
-            lv_obj_set_style(routine_labels[i], routines[i].textStyle);
-            lv_label_set_text(routine_labels[i], routines[i].title);
-            lv_obj_align(routine_labels[i], NULL, LV_ALIGN_IN_LEFT_MID, 0, 0);
+          if(colorSeed < 0x5F8){
+            colorSeed += 8;
+          }else{
+            colorSeed = 0;
           }
 
-          confirm_button = lv_btn_create(main_list, NULL);
-          lv_obj_set_style(confirm_button, &screen::resources::greenBox);
-          lv_obj_set_size(confirm_button, 40, 40);
-          lv_obj_set_pos(confirm_button, 200, 40 * selection);
+          lv_obj_refresh_style(panel[3]);
 
-          field->setX(240);
-          routines[selection].print(field);
+          break;
 
-          lastScreenState = robot::screen::state;
-        }
+        default:
+          throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+      }
+    }else{
+      switch(lastScreenState){
+        case screenMode::disabled:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode disabled"));
+          lv_obj_set_hidden(panel[0], true);
+          break;
 
-        selected = selected || lv_btn_get_state(confirm_button) == LV_BTN_STATE_PR;
+        case screenMode::notification:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode notification"));
+          lv_obj_set_hidden(panel[1], true);
+          break;
 
-        if(!selected){
-          for(int i = 0; i < number_of_routines; i++){
-            if(lv_btn_get_state(routine_buttons[i]) == LV_BTN_STATE_PR){
-              selection = i;
-              lv_obj_set_y(confirm_button, 40 * selection);
+        case screenMode::selection:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode selection"));
+          lv_obj_set_hidden(panel[2], true);
 
-              field->clean();
-              routines[selection].print(field);
-            }
-          }
+          break;
+        case screenMode::ez:
+          LOG_INFO(std::string("ScreenController: Cleaning up mode ez"));
+          lv_obj_set_hidden(panel[3], true);
+          ezgif.pause();
 
-          lv_obj_set_x(main_list, 0);
-        }else{
-          lv_obj_set_hidden(main_list, true);
-          field->setX(120);
-        }
+          break;
+        default:
+          throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+      }
 
-        break;
+      switch(robot::screen::state){
+        case screenMode::disabled:
+          LOG_INFO(std::string("ScreenController: Entering mode disabled"));
+          lv_obj_set_hidden(panel[0], false);          
+          break;
 
-      /*case screenMode::logo:
-        if(lastScreenState != robot::screen::state){
-          std::cout << "screen controller - initializing logo mode\n";
-          lv_obj_clean(scr);
-          lv_obj_set_size(scr, 480, 240);
-          lv_obj_t* logo_img = lv_img_create(scr, NULL);
-          lv_img_set_src(logo_img, &logo);
-          lastScreenState = robot::screen::state;
-        }*/
+        case screenMode::notification:
+          LOG_INFO(std::string("ScreenController: Entering mode notification"));
+          lv_obj_set_hidden(panel[1], false);          
+          break;
 
-        break;
-      case screenMode::disabled:
-        if(lastScreenState != robot::screen::state){
-          LOG_INFO(std::string("ScreenController: Disabled"));
+        case screenMode::selection:
+          LOG_INFO(std::string("ScreenController: Entering mode selection"));
+          lv_obj_set_hidden(panel[2], false);          
+          break;
 
-          if(field) {
-            delete field;
-            field = nullptr;
-          }
+        case screenMode::ez:
+          LOG_INFO(std::string("ScreenController: Entering mode ez"));
+          lv_obj_set_hidden(panel[3], false);          
+          ezgif.resume();
+          break;
 
-          lv_obj_clean(scr);
-
-          lastScreenState = robot::screen::state;
-        }
-
-        break;
+        default:
+          throw std::invalid_argument("robot::screen::state has been set to an undefined mode");
+      }
+      lastScreenState = robot::screen::state;
     }
+
     pros::delay(50);
   }
 }
