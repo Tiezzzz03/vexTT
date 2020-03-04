@@ -47,7 +47,7 @@ void initialize() {
   
   robot::lift = std::make_shared<Lift>(
     std::make_shared<okapi::Motor>(20),
-    std::make_shared<okapi::ADIButton>(2),
+    std::make_shared<okapi::ADIButton>(1), std::make_shared<okapi::ADIButton>(2),
     okapi::IterativePosPIDController::Gains({55, 0, 1, 0}));
 
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({-17, 18}));
@@ -78,5 +78,5 @@ void initialize() {
   robot::lift->startThread();
   robot::screen::controller = new pros::Task(screenControllerFN, NULL, "Screen");
   robot::screen::notification = "Get Your Stickers!";
-  while(!robot::imu->is_calibrating()) {pros::delay(100);}
+  while(robot::imu->is_calibrating()) {pros::delay(100);}
 }

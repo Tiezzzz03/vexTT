@@ -3,7 +3,7 @@
 
 class Lift {
 public:
-  Lift(std::shared_ptr<okapi::AbstractMotor> imotor, std::shared_ptr<okapi::AbstractButton> ibutton, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter = std::make_unique<okapi::PassthroughFilter>());
+  Lift(std::shared_ptr<okapi::AbstractMotor> imotor, std::shared_ptr<okapi::AbstractButton> ibutton1, std::shared_ptr<okapi::AbstractButton> ibutton2, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter = std::make_unique<okapi::PassthroughFilter>());
 
   ~Lift();
 
@@ -40,5 +40,6 @@ private:
   pros::Task *thread{nullptr};
   std::unique_ptr<okapi::IterativePosPIDController> controller{nullptr};
   std::shared_ptr<okapi::AbstractMotor> motor{nullptr};
-  std::shared_ptr<okapi::AbstractButton> button{nullptr};
+  std::shared_ptr<okapi::AbstractButton> button1{nullptr};
+  std::shared_ptr<okapi::AbstractButton> button2{nullptr};
 };

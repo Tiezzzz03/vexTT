@@ -1,7 +1,9 @@
 #include "tilter.hpp"
 
+using namespace okapi::literals;
+
 Tilter::Tilter(std::shared_ptr<okapi::AbstractMotor> imotor, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
-  motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::withSettledUtilParams(150, 1000), std::move(iderivativeFilter))){
+  motor(imotor), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::withSettledUtilParams(100, 1000, 0_ms), std::move(iderivativeFilter))){
 
   target.store(0);
   tare();

@@ -34,9 +34,12 @@ void opcontrol() {
   
   // ensure there is no velocity cap on the chassis
   robot::chassis->getModel()->setMaxVelocity(200);
+
+  // ensure the brake mode is set to coast
+  robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
   
   // set the screen to display ez logo gif
-  robot::screen::state = screenMode::notification;
+  robot::screen::state = screenMode::ez;
 
   // disable the profile controller, as the operator will control it manually
   if (robot::chassisProfiler) robot::chassisProfiler->flipDisable(true);

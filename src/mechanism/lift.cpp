@@ -1,7 +1,7 @@
 #include "lift.hpp"
 
-Lift::Lift(std::shared_ptr<okapi::AbstractMotor> imotor, std::shared_ptr<okapi::AbstractButton> ibutton, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
-  motor(imotor), button(ibutton), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
+Lift::Lift(std::shared_ptr<okapi::AbstractMotor> imotor, std::shared_ptr<okapi::AbstractButton> ibutton1, std::shared_ptr<okapi::AbstractButton> ibutton2, okapi::IterativePosPIDController::Gains igains, std::unique_ptr<okapi::Filter> iderivativeFilter):
+  motor(imotor), button1(ibutton1), button2(ibutton2), controller(std::make_unique<okapi::IterativePosPIDController>(igains, okapi::TimeUtilFactory::createDefault(), std::move(iderivativeFilter))){
 
   controller->setOutputLimits(12000,-12000);
 
@@ -26,7 +26,7 @@ void Lift::reset(){
 }
 
 bool Lift::isSettled(){
-  return controller->getTarget() == restingPos ? button->isPressed() : controller->isSettled();
+  return controller->getTarget() == restingPos ? button1->isPressed() || button2->isPressed() : controller->isSettled();
 }
 
 void Lift::waitUntilSettled(){
@@ -66,12 +66,12 @@ void Lift::loop(){
   double power;
 
   while(true){
-    if(button->isPressed()) motor->tarePosition();
+    if(button1->isPressed() || button2->isPressed()) motor->tarePosition();
     currentPos = motor->getPosition();
 
     if(controller->getTarget() >= currentPos){
       power = controller->step(currentPos);
-    }else if(button->isPressed()){
+    }else if(button1->isPressed() || button2->isPressed()){
       power = 0;
     }else{
       power = -12000;
