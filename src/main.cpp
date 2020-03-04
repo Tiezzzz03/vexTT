@@ -23,9 +23,16 @@ void autonomous() {
   /* this function is run when directed by a competition / tournament switch
    * this will follow the function pointer "run" to the selected
    * AutonomousRoutines object. All of these routines are defined in routines.cpp
+   * 
+   * This also records the time taken and displays the time to the screen, for diagnostic purposes
   **/
 
+  uint32_t startTime = pros::millis();
+
   routines[selection].run();
+
+  robot::screen::notification = "Routine Duration: " + std::to_string(pros::millis() - startTime);
+  robot::screen::state = screenMode::notification;
 }
 
 void opcontrol() {
