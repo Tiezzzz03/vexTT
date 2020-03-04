@@ -46,7 +46,8 @@ AutonomousRoutine(
   "#ff0000 Red Unprot 6",
   [](screen::ttField *field){
     field->draw(screen::cubeGroup::left4, 0);
-    field->draw(screen::scoringZone::nearRed, screen::color::orange, 5);
+    field->draw(screen::tower::near, screen::color::none, 0b1110);
+    field->draw(screen::scoringZone::nearRed, screen::color::orange, 6);
     field->finishDrawing();
   },
   [](){
@@ -119,6 +120,10 @@ AutonomousRoutine(
 AutonomousRoutine(
   "#ff0000 Red Prot 4",
   [](screen::ttField *field){
+    field->draw(screen::cubeGroup::farLeft, 0);
+    field->draw(screen::tower::left, screen::color::none, 0b0011);
+    field->draw(screen::scoringZone::farRed, screen::color::orange, 4);
+    field->finishDrawing();
   },
   [](){
     robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {1.5_ft, 0_ft, 0_deg}}, "2A", {1,1,10});
@@ -193,7 +198,8 @@ AutonomousRoutine(
   "#0000ff Blue Unprot 6",
   [](screen::ttField *field){
     field->draw(screen::cubeGroup::right4, 0);
-    field->draw(screen::scoringZone::nearBlue, screen::color::green, 5);
+    field->draw(screen::tower::near, screen::color::none, 0b1011);
+    field->draw(screen::scoringZone::nearBlue, screen::color::green, 6);
     field->finishDrawing();
   },
   [](){
@@ -266,6 +272,10 @@ AutonomousRoutine(
 AutonomousRoutine(
   "#0000ff Blue Prot 4",
   [](screen::ttField *field){
+    field->draw(screen::cubeGroup::farRight, 0);
+    field->draw(screen::tower::right, screen::color::none, 0b0110);
+    field->draw(screen::scoringZone::farBlue, screen::color::green, 4);
+    field->finishDrawing();
   },
   [](){
     robot::chassisProfiler->generatePath({{0_ft, 0_ft, 0_deg}, {1.5_ft, 0_ft, 0_deg}}, "2A", {1,1,10});
