@@ -33,12 +33,12 @@ AutonomousRoutine(
     field->finishDrawing();
   },
   [](){
-    robot::chassis->getModel()->setMaxVelocity(100);
-    robot::chassis->moveDistance(12_in);
+    robot::chassis->setMaxVelocity(100);
+    robot::chassisController->moveDistance(12_in);
 
-    robot::chassis->moveDistance(-12_in);
+    robot::chassisController->moveDistance(-12_in);
     
-    robot::chassis->getModel()->setMaxVelocity(200);
+    robot::chassis->setMaxVelocity(200);
   }
 ),
 
@@ -58,10 +58,10 @@ AutonomousRoutine(
     
     robot::lift->moveMidTower();
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.5, 0);
+    robot::chassis->driveVectorVoltage(-0.5, 0);
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::lift->reset();
     pros::delay(250);
     robot::lift->waitUntilSettled();
@@ -72,7 +72,7 @@ AutonomousRoutine(
     
     turningController.setTarget(-25);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() > -10);
     robot::chassis->stop();
@@ -85,7 +85,7 @@ AutonomousRoutine(
 
     turningController.setTarget(180);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() < 130);
     robot::chassis->stop();
@@ -98,21 +98,21 @@ AutonomousRoutine(
     robot::tilter->prime();
     robot::chassisProfiler->waitUntilSettled();
     
-    robot::chassis->getModel()->driveVectorVoltage(1,0);
+    robot::chassis->driveVectorVoltage(1,0);
     robot::tilter->stack();
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::tilter->waitUntilSettled();
 
     robot::intake->moveVoltage(-6000);
     pros::delay(500);
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.4, 0);
+    robot::chassis->driveVectorVoltage(-0.4, 0);
     robot::tilter->reset();
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::intake->moveVoltage(0);
   }
 ),
@@ -132,10 +132,10 @@ AutonomousRoutine(
 
     robot::lift->moveMidTower();
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.5, 0);
+    robot::chassis->driveVectorVoltage(-0.5, 0);
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::lift->reset();
     pros::delay(250);
     robot::lift->waitUntilSettled();
@@ -146,7 +146,7 @@ AutonomousRoutine(
 
     turningController.setTarget(90);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() < 45);
     robot::chassis->stop();
@@ -166,16 +166,16 @@ AutonomousRoutine(
 
     turningController.setTarget(230);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() < 180);
     robot::chassis->stop();
 
-    robot::chassis->getModel()->driveVectorVoltage(0.5, 0);
+    robot::chassis->driveVectorVoltage(0.5, 0);
     pros::delay(750);
 
     robot::chassis->stop();
-    robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+    robot::chassis->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
     robot::tilter->stack();
     pros::delay(500);
     robot::tilter->waitUntilSettled();
@@ -183,14 +183,14 @@ AutonomousRoutine(
     robot::intake->moveVoltage(-6000);
     pros::delay(1000);
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.4, 0);
+    robot::chassis->driveVectorVoltage(-0.4, 0);
     robot::tilter->reset();
     pros::delay(1000);
 
     robot::chassis->stop();
     robot::intake->moveVoltage(0);
 
-    robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
+    robot::chassis->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
   }
 ),
 
@@ -210,10 +210,10 @@ AutonomousRoutine(
     
     robot::lift->moveMidTower();
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.5, 0);
+    robot::chassis->driveVectorVoltage(-0.5, 0);
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::lift->reset();
     pros::delay(250);
     robot::lift->waitUntilSettled();
@@ -224,7 +224,7 @@ AutonomousRoutine(
     
     turningController.setTarget(25);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() < 10);
     robot::chassis->stop();
@@ -237,7 +237,7 @@ AutonomousRoutine(
 
     turningController.setTarget(-180);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() > -130);
     robot::chassis->stop();
@@ -250,21 +250,21 @@ AutonomousRoutine(
     robot::tilter->prime();
     robot::chassisProfiler->waitUntilSettled();
     
-    robot::chassis->getModel()->driveVectorVoltage(1,0);
+    robot::chassis->driveVectorVoltage(1,0);
     robot::tilter->stack();
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::tilter->waitUntilSettled();
 
     robot::intake->moveVoltage(-6000);
     pros::delay(500);
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.4, 0);
+    robot::chassis->driveVectorVoltage(-0.4, 0);
     robot::tilter->reset();
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::intake->moveVoltage(0);
   }
 ),
@@ -284,10 +284,10 @@ AutonomousRoutine(
 
     robot::lift->moveMidTower();
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.5, 0);
+    robot::chassis->driveVectorVoltage(-0.5, 0);
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::lift->reset();
     pros::delay(250);
     robot::lift->waitUntilSettled();
@@ -298,7 +298,7 @@ AutonomousRoutine(
 
     turningController.setTarget(-90);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() > -45);
     robot::chassis->stop();
@@ -318,16 +318,16 @@ AutonomousRoutine(
 
     turningController.setTarget(-230);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() > -180);
     robot::chassis->stop();
 
-    robot::chassis->getModel()->driveVectorVoltage(0.5, 0);
+    robot::chassis->driveVectorVoltage(0.5, 0);
     pros::delay(750);
 
     robot::chassis->stop();
-    robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
+    robot::chassis->setBrakeMode(okapi::AbstractMotor::brakeMode::hold);
     robot::tilter->stack();
     pros::delay(500);
     robot::tilter->waitUntilSettled();
@@ -335,14 +335,14 @@ AutonomousRoutine(
     robot::intake->moveVoltage(-6000);
     pros::delay(1000);
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.4, 0);
+    robot::chassis->driveVectorVoltage(-0.4, 0);
     robot::tilter->reset();
     pros::delay(1000);
 
     robot::chassis->stop();
     robot::intake->moveVoltage(0);
 
-    robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
+    robot::chassis->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
   }
 ),
 
@@ -357,10 +357,10 @@ AutonomousRoutine(
 
     robot::lift->moveMidTower();
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.5, 0);
+    robot::chassis->driveVectorVoltage(-0.5, 0);
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::lift->reset();
     pros::delay(250);
     robot::lift->waitUntilSettled();
@@ -371,31 +371,31 @@ AutonomousRoutine(
 
     turningController.setTarget(45);
     do{
-      robot::chassis->getModel()->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
+      robot::chassis->driveVectorVoltage(0, boostVoltage(turningController.step(robot::imu->get_rotation()), 0.2));
       pros::delay(20);
     }while(!turningController.isSettled() || robot::imu->get_rotation() < 20);
     robot::chassis->stop();
 
     robot::intake->moveVoltage(-4000);
-    robot::chassis->getModel()->driveVectorVoltage(0.5,0);
+    robot::chassis->driveVectorVoltage(0.5,0);
     pros::delay(400);
 
     robot::intake->moveVoltage(0);    
     robot::tilter->stack();
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::tilter->waitUntilSettled();
     pros::delay(500);
 
     robot::intake->moveVoltage(-6000);
     pros::delay(500);
 
-    robot::chassis->getModel()->driveVectorVoltage(-0.4, 0);
+    robot::chassis->driveVectorVoltage(-0.4, 0);
     robot::tilter->reset();
     pros::delay(1000);
 
-    robot::chassis->getModel()->stop();
+    robot::chassis->stop();
     robot::intake->moveVoltage(0);
   }
 )

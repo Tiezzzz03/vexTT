@@ -14,12 +14,15 @@ extern okapi::Controller controller;
 extern std::shared_ptr<Lift> lift;
 extern std::shared_ptr<Tilter> tilter;
 extern std::shared_ptr<okapi::MotorGroup> intake;
-extern std::shared_ptr<okapi::MotorGroup> lDrive;
-extern std::shared_ptr<okapi::MotorGroup> rDrive;
+extern std::shared_ptr<okapi::Motor> flDrive;
+extern std::shared_ptr<okapi::Motor> rlDrive;
+extern std::shared_ptr<okapi::Motor> frDrive;
+extern std::shared_ptr<okapi::Motor> rrDrive;
 
 extern std::shared_ptr<pros::Imu> imu;
 
-extern std::shared_ptr<okapi::ChassisController> chassis;
+extern std::shared_ptr<okapi::XDriveModel> chassis;
+extern std::shared_ptr<okapi::ChassisController> chassisController;
 extern std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
 
 namespace screen {

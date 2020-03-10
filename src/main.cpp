@@ -40,10 +40,10 @@ void opcontrol() {
   // or when not connected to either
   
   // ensure there is no velocity cap on the chassis
-  robot::chassis->getModel()->setMaxVelocity(200);
+  robot::chassis->setMaxVelocity(200);
 
   // ensure the brake mode is set to coast
-  robot::chassis->getModel()->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
+  robot::chassis->setBrakeMode(okapi::AbstractMotor::brakeMode::coast);
   
   // set the screen to display ez logo gif
   robot::screen::state = screenMode::ez;
@@ -67,10 +67,10 @@ void opcontrol() {
 
     // If A is pressed, lock control to forwards/backwards at 40% speed, otherwise do standard tank control
     if(robot::controller.getDigital(okapi::ControllerDigital::A)){
-      robot::chassis->getModel()->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.4, 0);
+      robot::chassis->arcade(robot::controller.getAnalog(okapi::ControllerAnalog::leftY) * 0.4, 0);
 
     }else{
-      robot::chassis->getModel()->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
+      robot::chassis->tank(robot::controller.getAnalog(okapi::ControllerAnalog::leftY),
                                        robot::controller.getAnalog(okapi::ControllerAnalog::rightY)); 
     }
 

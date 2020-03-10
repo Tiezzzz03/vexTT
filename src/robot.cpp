@@ -11,12 +11,15 @@ okapi::Controller controller;
 std::shared_ptr<Lift> lift;
 std::shared_ptr<Tilter> tilter;
 std::shared_ptr<okapi::MotorGroup> intake;
-std::shared_ptr<okapi::MotorGroup> lDrive;
-std::shared_ptr<okapi::MotorGroup> rDrive;
+std::shared_ptr<okapi::Motor> flDrive;
+std::shared_ptr<okapi::Motor> rlDrive;
+std::shared_ptr<okapi::Motor> frDrive;
+std::shared_ptr<okapi::Motor> rrDrive;
 
 std::shared_ptr<pros::Imu> imu;
 
-std::shared_ptr<okapi::ChassisController> chassis;
+std::shared_ptr<okapi::XDriveModel> chassis;
+std::shared_ptr<okapi::ChassisController> chassisController;
 std::shared_ptr<okapi::AsyncMotionProfileController> chassisProfiler;
 
 namespace screen {
@@ -51,20 +54,41 @@ void initialize() {
     okapi::IterativePosPIDController::Gains({55, 0, 1, 0}));
 
   robot::intake = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({ 10, -18}));
-  robot::lDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  4, -5}));
-  robot::rDrive = std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({  2, -3}));
+  
+  robot::flDrive = std::make_shared<okapi::Motor>(5);
+  robot::rlDrive = std::make_shared<okapi::Motor>(4);
+  robot::frDrive = std::make_shared<okapi::Motor>(-2);
+  robot::rrDrive = std::make_shared<okapi::Motor>(-3);
 
   robot::imu = std::make_shared<pros::Imu>(11);
   robot::imu->reset();
   uint32_t calibrationTime = pros::millis() + 2200;
 
-  robot::chassis = okapi::ChassisControllerBuilder()
-                      .withMotors(robot::lDrive, robot::rDrive)
-                      .withDimensions(okapi::AbstractMotor::gearset::green, okapi::ChassisScales({5.42_in, 10_in}, okapi::imev5GreenTPR))
-                      .build();
+  robot::chassis = std::make_shared<okapi::XDriveModel>(robot::flDrive, robot::frDrive, robot::rrDrive, robot::rlDrive,
+                                                        std::make_shared<okapi::ADIEncoder>(0,0), std::make_shared<okapi::ADIEncoder>(0,0),
+                                                        200, 12000);
+
+  robot::chassisController = std::make_shared<okapi::ChassisControllerIntegrated>(
+    okapi::TimeUtilFactory::createDefault(),
+    robot::chassis,
+    std::make_unique<okapi::AsyncPosIntegratedController>(
+      std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({robot::flDrive, robot::rlDrive})),
+      okapi::AbstractMotor::gearset::green,
+      200,
+      okapi::TimeUtilFactory::createDefault(),
+      okapi::Logger::getDefaultLogger()),
+    std::make_unique<okapi::AsyncPosIntegratedController>(
+      std::make_shared<okapi::MotorGroup>(okapi::MotorGroup({robot::frDrive, robot::rrDrive})),
+      okapi::AbstractMotor::gearset::green,
+      200,
+      okapi::TimeUtilFactory::createDefault(),
+      okapi::Logger::getDefaultLogger()),
+    okapi::AbstractMotor::gearset::green,
+    okapi::ChassisScales({4_in, 10_in}, okapi::imev5GreenTPR),
+    okapi::Logger::getDefaultLogger());
 
   robot::chassisProfiler = okapi::AsyncMotionProfileControllerBuilder()
-                      .withOutput(robot::chassis)
+                      .withOutput(robot::chassisController)
                       .withLimits({1, 2, 10})
                       .buildMotionProfileController();
 
